@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        margin: auto;
+        width: 420px;
+        max-width: 100%;
+        font-size: 14px;
+        background-color: #292a2d;
+        color: #E8EAED;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        user-select: none;
+        margin: 20px;
+        font-size: 32px;
+      }
+
+      header p {
+        margin: 0px 10px;
+        text-align: center
+      }
+
+      header img {
+        padding: 18px;
+      }
+
+      #content {
+        padding: 10px;
+      }
+
+      #content > div {
+        flex-direction: column;
+      }
+
+      #nochannels {
+        font-size: 120%;
+      }
+
+      .imageTutorial {
+        margin: auto;
+        padding: 10px;
+      }
+      .imageTutorial img {
+        border-radius: 6px;
+      }
+
+      ul li {
+        display: inline;
+      }
+
+      li.rate-selected {
+        font-weight: bold;
+      }
+      li:not(.rate-selected) {
+        visibility: hidden;
+      }
+
+      .channel-detail {
+        display: flex;
+        cursor: default;
+      }
+
+      .channel-author {
+        text-overflow: ellipsis;
+        width: calc(374px - 190px);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .channel-rates {
+        padding: 0px;
+        margin: 0px;
+      }
+
+      .channel-saved {
+        margin: auto;
+      }
+
+      .time-saved {
+        text-align: right;
+        width: 80px;
+      }
+
+      div#headers {
+        margin-bottom: 6px;
+      }
+
+      .clickable {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="../assets/faster.128.png" width="40" height="40" />
+      <p>Faster for&nbsp;&nbsp;&nbsp; YouTube™</p>
+    </header>
+    <hr>
+    <div id="content">
+      <div id="nochannels">
+        Start setting custom speeds on videos!<br/><br/>
+        Find the speed buttons on your YouTube videos near the Play button.<br/>
+        <span class="imageTutorial">
+          <img src="../assets/speed_controls.png" width="300" height="40" />
+        </span>
+        Revisit this page to find stats on how much time you've saved watching each YouTube channel!
+      </div>
+      <div id="channels"></div>
+    </div>
+    <script src="channels.js"></script>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+
+const createChannelsTable = (channels, sortByPropertyName = 'author') => {
+    const createChannelHeaders = (channels) => {
+        const createHeader = (title, classNames, sortProperty) => {
+            const headerColumn = document.createElement('span');
+            headerColumn.classList.add(...classNames);
+            headerColumn.textContent = title;
+            headerColumn.onclick = () => createChannelsTable(channels, sortProperty);
+            return headerColumn;
+        };
+
+        const header = document.createElement('div');
+        header.className = 'channel-detail';
+        header.appendChild(createHeader('Channel Name', ['channel-author', 'clickable'], 'author'));
+        header.appendChild(createHeader('Playback Speed', ['channel-rates', 'clickable'], 'rate'));
+        header.appendChild(createHeader('Hours Saved', ['channel-saved', 'clickable'], 'time'));
+        return header;
+    };
+
+    const container = document.getElementById('channels');
+    container.innerHTML = '';
+    container.appendChild(createChannelHeaders(channels));
+
+    const watchedSeconds = videos => videos.reduce((p, c) => p + c.watched, 0);
+    const sortChannelsInPlace = (channels, sortByPropertyName) => {
+        const byAuthor = (a, b) => a.author.localeCompare(b.author);
+        const byRate = (a, b) => b.rate - a.rate;
+        const byTime = (a, b) => watchedSeconds(b.videos) - watchedSeconds(a.videos);
+        const sortBy = { 'author': byAuthor, 'rate': byRate, 'time': byTime };
+        channels.sort(sortBy[sortByPropertyName]);
+    };
+
+    sortChannelsInPlace(channels, sortByPropertyName);
+    const createChannelRow = (author, rate, savedTime) => {
+        const PlaybackSpeedDefaults = [1, 1.5, 2, 2.5, 3];
+        return `<span class='channel-author'>${author}</span>
+            <ul class='channel-rates'>${PlaybackSpeedDefaults.map(r =>
+                `<li${rate === r ? ' class="rate-selected"' : ''}>${r.toFixed(1)}</li>`).join('')}
+            </ul><span class='time-saved'>${savedTime}</span>`;
+    };
+
+    for (let channel of channels) {
+        const details = document.createElement('div');
+        details.className = 'channel-detail';
+        details.innerHTML = createChannelRow(channel.author, channel.rate, (watchedSeconds(channel.videos) / 3600).toFixed(2));
+        container.appendChild(details);
+    }
+};
+
+const toggleChannelsVisibility = (hasChannels) => {
+    document.getElementById('nochannels').style.display = hasChannels ? 'none' : 'flex';
+    document.getElementById('channels').style.display = hasChannels ? 'flex' : 'none';
+};
+
+const buildChannelsWithVideos = (storage) => {
+    const isChannel = id => id.startsWith('UC');
+    return Object.keys(storage)
+        .filter(isChannel)
+        .map(c => { return {
+            ...storage[c],
+            'id': c,
+            'videos': storage[c].videos.map(vId => storage[vId])}})
+};
+
+chrome.storage.local.get((storage) => {
+    const channels = buildChannelsWithVideos(storage);    
+    toggleChannelsVisibility(!!channels.length);
+    createChannelsTable(channels);
+});

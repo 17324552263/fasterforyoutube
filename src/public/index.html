@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        margin: auto;
+        width: 374px;
+        max-width: 100%;
+        font-size: 14px;
+        background-color: #292a2d;
+        color: #E8EAED;
+      }
+
+      hr.popup {
+        margin-top: 24px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        user-select: none;
+        margin: 20px;
+        font-size: 32px;
+      }
+
+      header p {
+        margin: 0px 10px;
+        text-align: center
+      }
+
+      header img {
+        padding: 18px;
+      }
+
+      #content {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+    
+      .section {
+        height: 45px;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .section:last-of-type {
+        justify-content: end;
+      }
+
+      .emphasis {
+        font-weight: bold;
+        font-size: 118%;
+      }
+
+      a {
+        color: currentColor;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="../assets/faster.128.png" width="40" height="40" />
+      <p>Faster for&nbsp;&nbsp;&nbsp; YouTube™</p>
+    </header>
+    <hr id="headerRule">
+    <div id="content">
+      <div class="section">
+        <span>You've saved <span id="hourCount" class="emphasis"></span> hours!<br/></span>
+        <span><span id="channelCount" class="emphasis"></span> channels have played <span id="videoCount" class="emphasis"></span> videos Faster.</span>
+      </div>
+      <div class="section" id="channelStatistics"></div>
+      <div class="section">
+        Help * Comments * Requests * Reviews
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

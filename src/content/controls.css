@@ -1,0 +1,33 @@
+.speed-widget {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
+
+.speed-widget-controls {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.ytp-chrome-controls .ytp-button.faster-button {
+    transition: font-size 0.4s ease-in-out, font-weight 0.4s;
+}
+
+.ytp-chrome-controls .ytp-button.faster-button:hover {
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.ytp-button.faster-button.faster-button-selected {
+    text-shadow: #3367d6 2px 0 10px;
+    font-weight: bold;
+    font-size: 22px;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px;
+}
+
+.faster-button::after {
+    content: attr(data-speed) 'x';
+}
