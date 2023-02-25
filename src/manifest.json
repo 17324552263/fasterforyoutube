@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Faster for YouTube™",
+  "version": "0.1.0",
+  "version_name": "0.1.0 beta",
+
+  "action": {
+    "default_popup": "public/index.html#ff",
+    "default_title": "Faster for YouTube™ Statistics"
+  },
+  "description": "Play videos faster and remember channel settings.",
+  "icons": {
+    "16": "assets/faster.16.png",
+    "48": "assets/faster.48.png",
+    "128": "assets/faster.128.png"
+  },
+  "options_page": "public/channels.html",
+
+  "content_scripts": [{
+      "all_frames": true,
+      "matches": ["*://www.youtube.com/*"],
+      "css": ["content/controls.css"],
+      "js": [
+        "content/inject.js",
+        "content/controls.js",
+        "content/statistics.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+
+  "web_accessible_resources": [{
+      "resources": [ "content/extract.js" ],
+      "matches": [ "*://www.youtube.com/*" ]
+    }
+  ],
+
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "service/background.js"
+  }
+}
