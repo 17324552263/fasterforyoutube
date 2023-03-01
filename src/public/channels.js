@@ -63,9 +63,26 @@ const createChannelsTable = (channels, sortByPropertyName = 'author') => {
     }
 };
 
+const createChannelSummary = (channels) => {
+    const videos = channels.reduce((p, c) => {
+        p.push(...c.videos);
+        return p;
+    }, []);
+    const [elapsed, watched] = videos.reduce((p, c) => {
+        p[0] += c.elapsed;
+        p[1] += c.watched;
+        return p;
+    }, [0, 0]);
+
+    document.getElementById('hourCount').textContent = (watched / 3600).toFixed(2);
+    document.getElementById('videoCount').textContent = videos.length;
+    document.getElementById('averageSpeed').textContent = ((elapsed + watched) / elapsed).toFixed(2)
+    document.getElementById('channelCount').textContent = channels.length;
+}
+
 const toggleChannelsVisibility = (hasChannels) => {
     document.getElementById('nochannels').style.display = hasChannels ? 'none' : 'flex';
-    document.getElementById('channels').style.display = hasChannels ? 'flex' : 'none';
+    document.getElementById('channel-results').style.display = hasChannels ? 'flex' : 'none';
 };
 
 const buildChannelsWithVideos = (storage) => {
@@ -81,5 +98,6 @@ const buildChannelsWithVideos = (storage) => {
 chrome.storage.local.get((storage) => {
     const channels = buildChannelsWithVideos(storage);    
     toggleChannelsVisibility(!!channels.length);
+    createChannelSummary(channels);
     createChannelsTable(channels);
 });

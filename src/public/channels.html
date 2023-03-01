@@ -100,6 +100,18 @@
         cursor: pointer;
         text-decoration: underline;
       }
+
+      #channel-summary {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+      }
+
+      .emphasis {
+        font-weight: bold;
+        font-size: 118%;
+      }
     </style>
   </head>
   <body>
@@ -117,7 +129,14 @@
         </span>
         Revisit this page to find stats on how much time you've saved watching each YouTube channel!
       </div>
-      <div id="channels"></div>
+      <div id="channel-results">
+        <div id="channel-summary">
+          <span>You've saved <span id="hourCount" class="emphasis"></span> hours by<br/></span>
+          <span>playing <span id="videoCount" class="emphasis"></span> videos <span id="averageSpeed" class="emphasis"></span>x faster<br/></span>
+          <span>across <span id="channelCount" class="emphasis"></span> channels.</span>
+        </div>
+        <div id="channels"></div>
+      </div>
     </div>
     <script src="channels.js"></script>
   </body>
