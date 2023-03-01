@@ -37,9 +37,15 @@ const setStatisticsLink = () => {
     container.appendChild(text);
 }
 
+const setStorePageLinks = () => {
+    const help = document.getElementById('help');
+    help.onclick = () => window.open('https://chrome.google.com/webstore/detail/faster-for-youtube/efbbmeojmlmbelbcfgcjpijfjeeleidh', '_blank');
+};
+
 chrome.storage.local.get((storage) => {
     setPopUpBehavior();
     let [channelIds, videoIds] = splitChannelsAndVideos(storage);
     setStatisticsOverview(channelIds, videoIds, storage);
     setStatisticsLink();
+    setStorePageLinks();
 });
