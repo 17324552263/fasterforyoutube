@@ -31,25 +31,58 @@ const createChannelsTable = (channels, sortByPropertyName = 'author') => {
     };
 
     sortChannelsInPlace(channels, sortByPropertyName);
-    const createChannelRow = (author, rate, savedTime) => {
+    const createChannelRow = (id, author, rate, savedTime) => {
+        const details = document.createElement('div');
+        details.className = 'channel-detail';
+
         const PlaybackSpeedDefaults = [1, 1.5, 2, 2.5, 3];
-        return `<span class='channel-author'>${author}</span>
-            <ul class='channel-rates'>${PlaybackSpeedDefaults.map(r =>
-                `<li${rate === r ? ' class="rate-selected"' : ''}>${r.toFixed(1)}</li>`).join('')}
-            </ul><span class='time-saved'>${savedTime}</span>`;
+
+        const channelAuthor = document.createElement('span');
+        channelAuthor.className = 'channel-author';
+        channelAuthor.onclick = () => window.open(`https://www.youtube.com/channel/${id}`, '_blank');
+        channelAuthor.textContent = author;
+
+        const channelRates = document.createElement('ul');
+        channelRates.className = 'channel-rates';
+        channelRates.innerHTML = PlaybackSpeedDefaults.map(r =>
+            `<li${rate === r ? ' class="rate-selected"' : ''}>${r.toFixed(1)}</li>`).join('');
+
+        const timeSaved = document.createElement('span');
+        timeSaved.className = 'time-saved';
+        timeSaved.textContent = savedTime;
+
+        details.appendChild(channelAuthor);
+        details.appendChild(channelRates);
+        details.appendChild(timeSaved);
+        return details;
     };
 
     for (let channel of channels) {
-        const details = document.createElement('div');
-        details.className = 'channel-detail';
-        details.innerHTML = createChannelRow(channel.author, channel.rate, (watchedSeconds(channel.videos) / 3600).toFixed(2));
-        container.appendChild(details);
+        const totalWatchedHours = (watchedSeconds(channel.videos) / 3600).toFixed(2);
+        container.appendChild(createChannelRow(channel.id, channel.author, channel.rate, totalWatchedHours));
     }
 };
 
+const createChannelSummary = (channels) => {
+    const videos = channels.reduce((p, c) => {
+        p.push(...c.videos);
+        return p;
+    }, []);
+    const [elapsed, watched] = videos.reduce((p, c) => {
+        p[0] += c.elapsed;
+        p[1] += c.watched;
+        return p;
+    }, [0, 0]);
+
+    document.getElementById('hourCount').textContent = (watched / 3600).toFixed(2);
+    document.getElementById('videoCount').textContent = videos.length;
+    document.getElementById('averageSpeed').textContent = ((elapsed + watched) / elapsed).toFixed(2)
+    document.getElementById('channelCount').textContent = channels.length;
+}
+
 const toggleChannelsVisibility = (hasChannels) => {
     document.getElementById('nochannels').style.display = hasChannels ? 'none' : 'flex';
-    document.getElementById('channels').style.display = hasChannels ? 'flex' : 'none';
+    document.getElementById('channel-results').style.display = hasChannels ? 'flex' : 'none';
 };
 
 const buildChannelsWithVideos = (storage) => {
@@ -65,5 +98,6 @@ const buildChannelsWithVideos = (storage) => {
 chrome.storage.local.get((storage) => {
     const channels = buildChannelsWithVideos(storage);    
     toggleChannelsVisibility(!!channels.length);
+    createChannelSummary(channels);
     createChannelsTable(channels);
 });
