@@ -1,10 +1,11 @@
 (() => {
     const extractVideoDetails = (event) => {
-        const videoDetails = event.detail?.response?.playerResponse?.videoDetails;
+        const playerResponse = event.detail.response.playerResponse;
         return {
-            'author': videoDetails.author,
-            'channelId': videoDetails.channelId,
-            'videoId': videoDetails.videoId
+            'author': playerResponse?.videoDetails?.author,
+            'channelId': playerResponse?.videoDetails?.channelId,
+            'videoId': playerResponse?.videoDetails?.videoId,
+            'status': playerResponse.playabilityStatus.status
         };
     };
 
@@ -13,6 +14,12 @@
 
     const isPageWatch = event => event?.detail?.pageType === 'watch';
 
-    document.addEventListener('yt-navigate-finish', event =>
-        isPageWatch(event) && sendMessage(extractVideoDetails(event)));
+    document.addEventListener('yt-navigate-finish', event => {
+        if (isPageWatch(event)) {
+            const videoDetails = extractVideoDetails(event);
+            if (videoDetails.status !== 'ERROR') {
+                sendMessage(videoDetails);
+            }
+        }
+    });
 })();
