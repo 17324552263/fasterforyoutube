@@ -46,11 +46,15 @@ const sendVideoResponse = (tabId, request, rate) =>
 
 const broadcastVideoResponse = (tabId, request) => 
     fetchChannel(request.channelId).then(channel =>
-        sendVideoResponse(tabId, request, channel?.rate ?? null));
+        sendVideoResponse(tabId, Object.assign({}, request, {'author': request?.author || channel?.author}), channel?.rate ?? null));
 
 chrome.runtime.onMessage.addListener((request, sender, _) => {
     if (request.type === 'videoRequest') {
-        broadcastVideoResponse(sender.tab.id, request);
+        if (request.status === 'OK') {
+            broadcastVideoResponse(sender.tab.id, request);
+        } else {
+            console.info(`Video ${request?.videoId} has status ${request.status}`);
+        }
     } else if (request.type === 'speedUpdated') {
         saveChannel(request);
         broadcastSpeedUpdated(sender.tab.id, request);

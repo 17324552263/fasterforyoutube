@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     text-align: center;
+    font-size: 109%;
 }
 
 .ytp-chrome-controls .ytp-button.faster-button {
@@ -17,17 +18,31 @@
 
 .ytp-chrome-controls .ytp-button.faster-button:hover {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 130%;
 }
 
 .ytp-button.faster-button.faster-button-selected {
     text-shadow: #3367d6 2px 0 10px;
     font-weight: bold;
-    font-size: 22px;
-    -webkit-text-fill-color: transparent;
+    font-size: 130%;
     -webkit-text-stroke: 1px;
+}
+
+@media all and (max-width: 600px) {
+    /* Embedded Videos */
+    #speedLabel {
+        display: none;
+    }
+
+    .ytp-chrome-controls .ytp-button.faster-button {
+        width: 34px !important;
+    }
 }
 
 .faster-button::after {
     content: attr(data-speed) 'x';
+}
+
+.ytp-fullerscreen-edu-chevron {
+    display: none !important;
 }

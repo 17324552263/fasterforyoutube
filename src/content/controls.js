@@ -1,4 +1,3 @@
-
 (() => {
     const PlaybackSpeedDefaults = [1, 1.5, 2, 2.5, 3];
 
@@ -12,6 +11,24 @@
         static SpeedControlsContainer = 'speed-widget-controls';
     }
 
+    function waitFor(selector) {
+        // https://stackoverflow.com/questions/5525071/how-to-wait-until-an-element-exists
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    }
+
     class DOMHelper {
         static Video = 'video[src]';
         static VideoContainer = `div.html5-video-container:has(${DOMHelper.Video})`;
@@ -19,6 +36,7 @@
         static ControlContainer = 'div.ytp-chrome-bottom .ytp-left-controls';
 
         static fetchVideo = () => document.querySelector(DOMHelper.Video);
+        static awaitVideo = async () => waitFor(DOMHelper.Video);
         static fetchSpeedButtons = () => document.querySelectorAll(`span.${CSSClassHelper.SpeedButton}`)
         static fetchVideoControls = () => document.querySelector([
             DOMHelper.VideoContainer, DOMHelper.SiblingToken, DOMHelper.ControlContainer].join(''));
@@ -27,7 +45,7 @@
     const setSpeedLabelActive = (speed) => {
         for (let child of DOMHelper.fetchSpeedButtons()) {
             child.classList.remove(CSSClassHelper.SpeedButtonSelected);
-            if (child.dataset.speed === speed.toFixed(1)) {
+            if (child.dataset.speed === speed.toString()) {
                 child.classList.add(CSSClassHelper.SpeedButtonSelected);
             }
         }
@@ -41,6 +59,7 @@
         };
         const createSpeedLabel = () => {
             const indicator = document.createElement('span');
+            indicator.id = 'speedLabel';
             indicator.innerText = 'Speed: ';
             indicator.style.fontWeight = 'bold';
             return indicator;
@@ -59,7 +78,7 @@
             {'type': 'speedUpdated', 'rate': speed}));
         const createSpeedButton = (speed) => {
             const b = document.createElement('span');
-            b.dataset.speed = speed.toFixed(1);
+            b.dataset.speed = speed.toString();
             b.classList.add(...CSSClassHelper.SpeedButtonClasses);
             b.addEventListener('click', () => {
                 updateVideoSpeed(speed);
@@ -89,16 +108,18 @@
     const updateHTMLVideoPlaybackRate = (rate) => DOMHelper.fetchVideo().playbackRate = rate;
 
     chrome.runtime.onMessage.addListener((request) => {
-        if (request.type === 'videoResponse') {
-            const video = {
-                'channelId': request.channelId,
-                'author': request.author,
-                'rate': request.rate ?? DOMHelper.fetchVideo().playbackRate,
-                'videoId': request.videoId
-            };
-            addVideoControlsToPage(video);
-            updateHTMLVideoPlaybackRate(video.rate);
-            setSpeedLabelActive(video.rate);
+        if (request.type === 'videoResponse' && request.uuid === FFYP_UUID) {
+            DOMHelper.awaitVideo().then(element => {
+                const video = {
+                    'channelId': request.channelId,
+                    'author': request.author,
+                    'rate': request.rate ?? element.playbackRate,
+                    'videoId': request.videoId
+                };
+                addVideoControlsToPage(video);
+                updateHTMLVideoPlaybackRate(video.rate);
+                setSpeedLabelActive(video.rate);
+            });
         }
     });
 })();
