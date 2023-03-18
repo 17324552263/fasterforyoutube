@@ -58,7 +58,7 @@
     chrome.runtime.onMessage.addListener((request) => {
         if (['videoResponse', 'speedUpdated'].includes(request.type)) {
             StatisticsController.setRate(request.rate);
-            if (request.type === 'videoResponse') {
+            if (request.type === 'videoResponse' && request.uuid === FFYP_UUID) {
                 const sendHeartbeat = (rate) => (rate > 1) && chrome.runtime.sendMessage({
                     'channelId': request.channelId,
                     'author': request.author,
