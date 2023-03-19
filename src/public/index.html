@@ -80,6 +80,10 @@
         border-radius: 6px;
       }
 
+      #channelStatistics {
+        display: none;
+      }
+
       #help {
         cursor: pointer;
         text-align: center;
@@ -101,11 +105,19 @@
         </span>
         Revisit this page to find stats on how much time you've saved watching each YouTube channel!
       </div>
-      <div class="section" id="channelOverview">
-        <span>You've saved <span id="hourCount" class="emphasis"></span> hours!<br/></span>
-        <span><span id="channelCount" class="emphasis"></span> channels have played <span id="videoCount" class="emphasis"></span> videos Faster.</span>
+      <div class="section" id="channelStatistics">
+        <fieldset>
+          <legend><span id="channelName" class="emphasis"></span></legend>
+          <span>
+            Watched <span id="channelVideoCount" class="emphasis"></span>
+            videos, saving <span id="channelHourCount" class="emphasis"></span> hours.
+          </span>
+        </fieldset>
       </div>
-      <div class="section" id="channelStatistics"></div>
+      <div class="section" id="statisticsOverview">
+        <span>You've saved <span id="allHourCount" class="emphasis"></span> hours watching Faster!</span>
+        <span id="allStatisticsLink"></span>
+      </div>
       <div class="section">
         <span id="help">
           Question? Suggestion? Problem?
