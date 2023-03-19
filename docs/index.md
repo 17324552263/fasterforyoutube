@@ -4,6 +4,7 @@ Play videos faster and remember channel settings.
 - Keep custom speeds per channel
 - Show hours saved by watching faster
 - Breakdown statistics by channel
+- Works with embedded videos and smaller devices
 
 This extension is [open source](https://github.com/17324552263/fasterforyoutube), which means you can view, modify, and share the source code that built it.
 
