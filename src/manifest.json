@@ -18,7 +18,7 @@
 
   "content_scripts": [{
       "all_frames": true,
-      "matches": ["*://www.youtube.com/*"],
+      "matches": ["*://www.youtube.com/*", "*://www.youtube-nocookie.com/*"],
       "css": ["content/controls.css"],
       "js": [
         "content/inject.js",
@@ -31,7 +31,7 @@
 
   "web_accessible_resources": [{
       "resources": [ "content/extract.js" ],
-      "matches": [ "*://www.youtube.com/*" ]
+      "matches": [ "*://www.youtube.com/*", "*://www.youtube-nocookie.com/*" ]
     }
   ],
 
