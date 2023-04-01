@@ -23,7 +23,7 @@ const setStatisticsOverview = (channelIds, videoIds, storage) => {
 
 const setChannelStatistics = (channelIds, videoIds, storage) => {
     const findChannelId = (url) => {
-        const videoMatch = url.match(/\?v=(.*)/);
+        const videoMatch = url.match(/[?&]v=([\w\-]+)/);
         if (videoMatch?.length === 2) {
             const videoId = videoMatch[1];
             return channelIds.find(c => storage[c].videos.indexOf(videoId) !== -1);
