@@ -1,6 +1,11 @@
 # Release Notes
 A record of feature updates that users experience. This documentation announces functionality, but does not replace how-to information or support.
 
+## 0.2.1-beta, 2023.04.01
+- Add support for nocookie embedded videos
+- Fix channel statistics showing for some videos
+- Fix channel statistics with missing videos
+
 ## 0.2.0-beta, 2023.03.19
 - Embedded videos now have Faster speeds
 - Responsive sizing for smaller and larger videos
