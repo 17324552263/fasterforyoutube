@@ -92,7 +92,7 @@ const buildChannelsWithVideos = (storage) => {
         .map(c => { return {
             ...storage[c],
             'id': c,
-            'videos': storage[c].videos.map(vId => storage[vId])}})
+            'videos': storage[c].videos.map(vId => storage[vId] ?? { 'elapsed': 0, 'watched': 0 })}})
 };
 
 chrome.storage.local.get((storage) => {

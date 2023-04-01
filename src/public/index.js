@@ -17,7 +17,7 @@ const setStatisticsOverview = (channelIds, videoIds, storage) => {
     document.getElementById('statisticsOverview').style.display = channelIds.length ? 'flex' : 'none';
     document.getElementById('allStatisticsLink').style.display = channelIds.length ? 'flex' : 'none';
 
-    const watchedSeconds = videoIds.reduce((p, c) => p + storage[c].watched, 0);
+    const watchedSeconds = videoIds.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0);
     document.getElementById('allHourCount').innerText = (watchedSeconds / 3600).toFixed(2);
 };
 
@@ -48,7 +48,7 @@ const setChannelStatistics = (channelIds, videoIds, storage) => {
     const updateChannelView = (channel) => {
         document.getElementById('channelName').innerText = channel.author;
         document.getElementById('channelVideoCount').innerText = channel.videos.length;
-        document.getElementById('channelHourCount').innerText = (channel.videos.reduce((p, c) => p + storage[c].watched, 0) / 3600).toFixed(2);
+        document.getElementById('channelHourCount').innerText = (channel.videos.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0) / 3600).toFixed(2);
     };
 
     const ActiveTabQuery = { active: true, currentWindow: true };
