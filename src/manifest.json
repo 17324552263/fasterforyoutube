@@ -18,13 +18,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "faster-for-youtube@17324552263",
+      "data_collection_permissions": {
+        "required": ["none"]
+      },
       "strict_min_version": "126.0"
     }
-  },
-
-  "data_collection_permissions": {
-    "required": [],
-    "optional": []
   },
 
   "content_scripts": [{
