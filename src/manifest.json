@@ -1,11 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Faster for YouTube™",
-  "version": "0.2.1",
-  "version_name": "0.2.1 beta",
+  "version": "0.3.0",
 
   "action": {
-    "default_popup": "public/index.html#ff",
+    "default_popup": "public/index.html",
     "default_title": "Faster for YouTube™ Statistics"
   },
   "description": "Play videos faster and remember channel settings.",
@@ -44,6 +43,7 @@
 
   "permissions": ["storage", "activeTab"],
   "background": {
-    "service_worker": "service/background.js"
+    "service_worker": "service/background.js",
+    "scripts": ["service/background.js"]
   }
 }

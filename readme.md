@@ -25,6 +25,41 @@ With Github Pages, we host under the [subdomain FFYT](https://ffyt.17324552263.c
 `service/`
 - `background` - Service worker handling event-based requests and rebroadcasting messages.
 
+## Building & Distribution
+
+No build tools or dependencies are required. The extension runs directly from the `src/` directory.
+
+### Load Unpacked (Local Development)
+
+**Chrome / Chromium:**
+1. Navigate to `chrome://extensions`
+2. Enable **Developer mode** (toggle, top right)
+3. Click **Load unpacked** and select the `src/` folder
+
+**Firefox:**
+1. Navigate to `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on**
+3. Select any file inside the `src/` folder (e.g. `manifest.json`)
+
+> Temporary add-ons in Firefox are removed when the browser closes. For persistent local installs, you need a [signed or unlisted build](https://extensionworkshop.com/documentation/publish/).
+
+### Create a Release Build
+
+The release artifact is a zip of the `src/` directory. Run from the repo root:
+
+```bash
+VERSION=$(grep -m1 '"version"' src/manifest.json | sed 's/[^0-9.]//g') && (cd src && zip -r "../dist/FFTY-${VERSION}.zip" . -x "**/.DS_Store")
+```
+
+The version is read directly from `manifest.json`, so updating the manifest is all you need before building. The same zip can be submitted to both stores — Chrome ignores `browser_specific_settings` and Firefox ignores `version_name`.
+
+### Submitting to Stores
+
+| Store | Dashboard | Notes |
+|---|---|---|
+| Chrome Web Store | [Developer Dashboard](https://chrome.google.com/webstore/devconsole) | Upload the zip under the existing listing |
+| Firefox Add-ons (AMO) | [Developer Hub](https://addons.mozilla.org/developers/) | Create a new listing; the `gecko.id` in `manifest.json` ties it to your account |
+
 ## Chrome Extension - How Do?
 Working in the Chrome Extension ecosystem has its own set of constraints and preferred architecture. Different aspects of your extension have access to different subsets of the HTML elements and the Chrome API. Bridging this gap, is a set of messaging capabilities which ensure higher impact APIs are executed in isolation.
 
