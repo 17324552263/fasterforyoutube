@@ -44,8 +44,12 @@ const createChannelsTable = (channels, sortByPropertyName = 'author') => {
 
         const channelRates = document.createElement('ul');
         channelRates.className = 'channel-rates';
-        channelRates.innerHTML = PlaybackSpeedDefaults.map(r =>
-            `<li${rate === r ? ' class="rate-selected"' : ''}>${r.toFixed(1)}</li>`).join('');
+        channelRates.replaceChildren(...PlaybackSpeedDefaults.map(r => {
+            const li = document.createElement('li');
+            if (rate === r) li.className = 'rate-selected';
+            li.textContent = r.toFixed(1);
+            return li;
+        }));
 
         const timeSaved = document.createElement('span');
         timeSaved.className = 'time-saved';
