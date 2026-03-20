@@ -16,6 +16,13 @@
   },
   "options_page": "public/channels.html",
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "faster-for-youtube@17324552263",
+      "strict_min_version": "109.0"
+    }
+  },
+
   "content_scripts": [{
       "all_frames": true,
       "matches": ["*://www.youtube.com/*", "*://www.youtube-nocookie.com/*"],

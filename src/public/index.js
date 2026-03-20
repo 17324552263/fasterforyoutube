@@ -78,7 +78,11 @@ const setStatisticsLink = () => {
 
 const setStorePageLinks = () => {
     const help = document.getElementById('help');
-    help.onclick = () => window.open('https://chrome.google.com/webstore/detail/faster-for-youtube/efbbmeojmlmbelbcfgcjpijfjeeleidh', '_blank');
+    const isFirefox = navigator.userAgent.includes('Firefox');
+    const storeUrl = isFirefox
+        ? 'https://addons.mozilla.org/firefox/addon/faster-for-youtube/'
+        : 'https://chrome.google.com/webstore/detail/faster-for-youtube/efbbmeojmlmbelbcfgcjpijfjeeleidh';
+    help.onclick = () => window.open(storeUrl, '_blank');
 };
 
 chrome.storage.local.get((storage) => {
