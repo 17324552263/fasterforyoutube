@@ -37,9 +37,13 @@ No build tools or dependencies are required. The extension runs directly from th
 3. Click **Load unpacked** and select the `src/` folder
 
 **Firefox:**
-1. Navigate to `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on**
-3. Select any file inside the `src/` folder (e.g. `manifest.json`)
+
+Firefox requires the extension to be loaded from a zip due to macOS file access restrictions — selecting only `manifest.json` will load the extension but Firefox won't be able to read any other files in the directory.
+
+1. Build the zip (see [Create a Release Build](#create-a-release-build) below)
+2. Navigate to `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on**
+4. Select the zip from `dist/`
 
 > Temporary add-ons in Firefox are removed when the browser closes. For persistent local installs, you need a [signed or unlisted build](https://extensionworkshop.com/documentation/publish/).
 
