@@ -89,12 +89,7 @@ const refreshChannelTimes = () => {
             const el = row.querySelector('.time-saved');
             if (!el) return;
             const next = formatDuration(watched);
-            if (el.textContent !== next) {
-                el.textContent = next;
-                el.classList.remove('flash');
-                void el.offsetWidth; // force reflow to restart animation
-                el.classList.add('flash');
-            }
+            if (el.textContent !== next) el.textContent = next;
         });
     });
 };
@@ -104,9 +99,8 @@ chrome.storage.onChanged.addListener((changes) => {
         .filter(([k]) => !k.startsWith('UC'))
         .reduce((sum, [, c]) => sum + ((c.newValue?.watched ?? 0) - (c.oldValue?.watched ?? 0)), 0);
     if (delta > 0) {
-        const from = _totalWatchedSeconds;
         _totalWatchedSeconds += delta;
-        animateCount(document.getElementById('hourCount'), from, _totalWatchedSeconds);
+        document.getElementById('hourCount').textContent = formatWatchedTime(_totalWatchedSeconds).replace(/\u2007/g, '');
         if (++_heartbeatCount % 8 === 0) refreshChannelTimes();
     }
 });

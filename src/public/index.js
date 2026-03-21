@@ -21,9 +21,8 @@ chrome.storage.onChanged.addListener((changes) => {
         .filter(([k]) => !k.startsWith('UC'))
         .reduce((sum, [, c]) => sum + ((c.newValue?.watched ?? 0) - (c.oldValue?.watched ?? 0)), 0);
     if (delta > 0) {
-        const from = _totalWatchedSeconds;
         _totalWatchedSeconds += delta;
-        animateCount(hourCountEl(), from, _totalWatchedSeconds);
+        hourCountEl().textContent = formatWatchedTime(_totalWatchedSeconds).replace(/\u2007/g, '');
     }
 });
 
