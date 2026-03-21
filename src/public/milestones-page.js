@@ -1,9 +1,10 @@
 
 const CATEGORY_LABELS = {
-    time:     'Time Saved',
-    videos:   'Videos',
-    channels: 'Channels',
-    streak:   'Streaks',
+    time:        'Time Saved',
+    videos:      'Videos',
+    channels:    'Channels',
+    streak:      'Streaks',
+    active_days: 'Active Days',
 };
 
 const renderAllMilestones = (record) => {

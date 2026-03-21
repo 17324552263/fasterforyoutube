@@ -102,13 +102,17 @@ const setStorePageLinks = () => {
 
 const renderMilestoneBadges = (record) => {
     const earned = record?.earned ?? {};
-    const earnedList = MILESTONES.filter(m => earned[m.id])
-        .sort((a, b) => earned[a.id] - earned[b.id]);
-    if (!earnedList.length) return;
+    const categories = [...new Set(MILESTONES.map(m => m.category))];
+    const top = categories.flatMap(cat => {
+        const best = MILESTONES.filter(m => m.category === cat && earned[m.id])
+            .sort((a, b) => earned[b.id] - earned[a.id])[0];
+        return best ? [best] : [];
+    });
+    if (!top.length) return;
 
     const container = document.getElementById('milestones');
     container.style.display = 'flex';
-    for (const m of earnedList) {
+    for (const m of top) {
         const badge = document.createElement('span');
         badge.className = 'milestone-badge';
         badge.innerHTML = m.svg;

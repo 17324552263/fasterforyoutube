@@ -1,9 +1,10 @@
 
 const CATEGORY_COLORS = {
-    time:     '#f0a060',
-    videos:   '#60a8f0',
-    channels: '#60c880',
-    streak:   '#f06060',
+    time:        '#f0a060',
+    videos:      '#60a8f0',
+    channels:    '#60c880',
+    streak:      '#f06060',
+    active_days: '#a060e0',
 };
 
 // SVG icon strings — each 24×24 viewBox, cohesive design per category
@@ -166,6 +167,40 @@ const _svg = {
       <path d="M12 18.5C11 18 10.5 16.5 11 15 11.5 13.5 12 13 12 12.5 12 13 12.5 13.5 13 15 13.5 16.5 13 18 12 18.5z" fill="#ffb870" opacity="0.9"/>
     </svg>`,
 
+    // ── Active Days — purple arc ring, progressively filled clockwise ────────
+
+    day_7: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="#9060e0" stroke-width="1.5" opacity="0.25"/>
+      <path d="M 12 3 A 9 9 0 0 1 20.6 9.2" fill="none" stroke="#b080ff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="1.3" fill="#9060e0"/>
+    </svg>`,
+
+    day_30: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="#9060e0" stroke-width="1.5" opacity="0.25"/>
+      <path d="M 12 3 A 9 9 0 0 1 17.3 19.3" fill="none" stroke="#b080ff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="1.3" fill="#9060e0"/>
+    </svg>`,
+
+    day_100: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="#9060e0" stroke-width="1.5" opacity="0.25"/>
+      <path d="M 12 3 A 9 9 0 1 1 6.7 19.3" fill="none" stroke="#b080ff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="1.3" fill="#9060e0"/>
+    </svg>`,
+
+    day_200: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="#9060e0" stroke-width="1.5" opacity="0.25"/>
+      <path d="M 12 3 A 9 9 0 1 1 3.4 9.2" fill="none" stroke="#b080ff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="1.3" fill="#9060e0"/>
+    </svg>`,
+
+    day_365: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" fill="#7040c0" stroke="#b080ff" stroke-width="1.5"/>
+      <ellipse cx="9.5" cy="8.5" rx="2" ry="1.2" fill="rgba(200,160,255,0.2)" transform="rotate(-30 9.5 8.5)"/>
+      <circle cx="12" cy="12" r="1.5" fill="#d0b0ff"/>
+    </svg>`,
+
+    // ── Streaks (continued) ───────────────────────────────────────────────────
+
     streak_30: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M6 19C4.5 19 3.5 17.5 3.5 16c0-2 1.5-3.5 2.5-5 0 1.5.5 2.5.5 4 .3-.5.8-1 .8-2.5 1 1.5 1.2 2.5 1.2 4C8.5 18 7.5 19 6 19z" fill="#c02020" opacity="0.7"/>
       <path d="M18 19C16.5 19 15.5 18 15.5 16.5c0-1.5 1.2-2.5 1.2-4 .5 1.5.5 2 .8 2.5 0-1.5.5-2.5.5-4 1 1.5 2.5 3 2.5 5C20.5 17.5 19.5 19 18 19z" fill="#c02020" opacity="0.7"/>
@@ -175,34 +210,48 @@ const _svg = {
     </svg>`,
 };
 
+// Extended streak icons reuse the blazing flame
+['streak_60', 'streak_90', 'streak_180', 'streak_365'].forEach(id => { _svg[id] = _svg.streak_30; });
+
 const MILESTONES = [
     // Time saved (threshold in seconds)
-    { id: 'time_15m',   category: 'time',     label: 'Coffee Break',    threshold: 15 * 60,               description: '15 minutes saved'   },
-    { id: 'time_1h',    category: 'time',     label: 'Lunch Hour',      threshold: 60 * 60,               description: '1 hour saved'        },
-    { id: 'time_8h',    category: 'time',     label: 'Workday',         threshold: 8 * 60 * 60,           description: '8 hours saved'       },
-    { id: 'time_1d',    category: 'time',     label: 'Day Saver',       threshold: 24 * 60 * 60,          description: '1 day saved'         },
-    { id: 'time_7d',    category: 'time',     label: 'Week Saver',      threshold: 7 * 24 * 60 * 60,      description: '7 days saved'        },
-    { id: 'time_30d',   category: 'time',     label: 'Month Saver',     threshold: 30 * 24 * 60 * 60,     description: '30 days saved'       },
+    { id: 'time_15m',    category: 'time',        label: 'Coffee Break',    threshold: 15 * 60,               description: '15 minutes saved'    },
+    { id: 'time_1h',     category: 'time',        label: 'Lunch Hour',      threshold: 60 * 60,               description: '1 hour saved'         },
+    { id: 'time_8h',     category: 'time',        label: 'Workday',         threshold: 8 * 60 * 60,           description: '8 hours saved'        },
+    { id: 'time_1d',     category: 'time',        label: 'Day Saver',       threshold: 24 * 60 * 60,          description: '1 day saved'          },
+    { id: 'time_7d',     category: 'time',        label: 'Week Saver',      threshold: 7 * 24 * 60 * 60,      description: '7 days saved'         },
+    { id: 'time_30d',    category: 'time',        label: 'Month Saver',     threshold: 30 * 24 * 60 * 60,     description: '30 days saved'        },
 
     // Videos watched faster (threshold is video count)
-    { id: 'vid_10',     category: 'videos',   label: 'Getting Started', threshold: 10,                    description: '10 videos'           },
-    { id: 'vid_25',     category: 'videos',   label: 'Habit Forming',   threshold: 25,                    description: '25 videos'           },
-    { id: 'vid_100',    category: 'videos',   label: 'Century',         threshold: 100,                   description: '100 videos'          },
-    { id: 'vid_250',    category: 'videos',   label: 'Dedicated',       threshold: 250,                   description: '250 videos'          },
-    { id: 'vid_500',    category: 'videos',   label: 'Obsessed',        threshold: 500,                   description: '500 videos'          },
-    { id: 'vid_1000',   category: 'videos',   label: 'Marathoner',      threshold: 1000,                  description: '1,000 videos'        },
+    { id: 'vid_10',      category: 'videos',      label: 'Getting Started', threshold: 10,                    description: '10 videos'            },
+    { id: 'vid_25',      category: 'videos',      label: 'Habit Forming',   threshold: 25,                    description: '25 videos'            },
+    { id: 'vid_100',     category: 'videos',      label: 'Century',         threshold: 100,                   description: '100 videos'           },
+    { id: 'vid_250',     category: 'videos',      label: 'Dedicated',       threshold: 250,                   description: '250 videos'           },
+    { id: 'vid_500',     category: 'videos',      label: 'Obsessed',        threshold: 500,                   description: '500 videos'           },
+    { id: 'vid_1000',    category: 'videos',      label: 'Marathoner',      threshold: 1000,                  description: '1,000 videos'         },
 
     // Channels saved (threshold is channel count)
-    { id: 'ch_5',       category: 'channels', label: 'Curator',         threshold: 5,                     description: '5 channels saved'    },
-    { id: 'ch_10',      category: 'channels', label: 'Collector',       threshold: 10,                    description: '10 channels saved'   },
-    { id: 'ch_25',      category: 'channels', label: 'Archivist',       threshold: 25,                    description: '25 channels saved'   },
-    { id: 'ch_50',      category: 'channels', label: 'Encyclopedist',   threshold: 50,                    description: '50 channels saved'   },
+    { id: 'ch_5',        category: 'channels',    label: 'Curator',         threshold: 5,                     description: '5 channels saved'     },
+    { id: 'ch_10',       category: 'channels',    label: 'Collector',       threshold: 10,                    description: '10 channels saved'    },
+    { id: 'ch_25',       category: 'channels',    label: 'Archivist',       threshold: 25,                    description: '25 channels saved'    },
+    { id: 'ch_50',       category: 'channels',    label: 'Encyclopedist',   threshold: 50,                    description: '50 channels saved'    },
 
     // Streaks — based on longestStreak, so they survive a broken streak
-    { id: 'streak_3',   category: 'streak',   label: 'On a Roll',       threshold: 3,                     description: '3-day streak'        },
-    { id: 'streak_7',   category: 'streak',   label: 'Week Streak',     threshold: 7,                     description: '7-day streak'        },
-    { id: 'streak_14',  category: 'streak',   label: 'Fortnight',       threshold: 14,                    description: '14-day streak'       },
-    { id: 'streak_30',  category: 'streak',   label: 'Monthly',         threshold: 30,                    description: '30-day streak'       },
+    { id: 'streak_3',    category: 'streak',      label: 'On a Roll',       threshold: 3,                     description: '3-day streak'         },
+    { id: 'streak_7',    category: 'streak',      label: 'Week Streak',     threshold: 7,                     description: '7-day streak'         },
+    { id: 'streak_14',   category: 'streak',      label: 'Fortnight',       threshold: 14,                    description: '14-day streak'        },
+    { id: 'streak_30',   category: 'streak',      label: 'Monthly',         threshold: 30,                    description: '30-day streak'        },
+    { id: 'streak_60',   category: 'streak',      label: 'Two Months',      threshold: 60,                    description: '60-day streak'        },
+    { id: 'streak_90',   category: 'streak',      label: 'Quarter Year',    threshold: 90,                    description: '90-day streak'        },
+    { id: 'streak_180',  category: 'streak',      label: 'Half Year',       threshold: 180,                   description: '180-day streak'       },
+    { id: 'streak_365',  category: 'streak',      label: 'Eternal Flame',   threshold: 365,                   description: '365-day streak'       },
+
+    // Active days — total distinct days with any watching activity
+    { id: 'day_7',       category: 'active_days', label: 'First Week',      threshold: 7,                     description: '7 active days'        },
+    { id: 'day_30',      category: 'active_days', label: 'Monthly Regular', threshold: 30,                    description: '30 active days'       },
+    { id: 'day_100',     category: 'active_days', label: 'Centurion',       threshold: 100,                   description: '100 active days'      },
+    { id: 'day_200',     category: 'active_days', label: 'Committed',       threshold: 200,                   description: '200 active days'      },
+    { id: 'day_365',     category: 'active_days', label: 'Year of Days',    threshold: 365,                   description: '365 active days'      },
 ].map(m => ({ ...m, svg: _svg[m.id] }));
 
 const _dateKey = (d) =>
@@ -225,19 +274,22 @@ const _computeStreak = (daily) => {
 const _computeStats = (storage) => {
     const channels = Object.keys(storage).filter(k => k.startsWith('UC'));
     const videoIds  = channels.flatMap(c => storage[c].videos ?? []);
+    const daily     = storage['_daily'] ?? {};
     return {
         totalWatched:  videoIds.reduce((sum, id) => sum + (storage[id]?.watched  ?? 0), 0),
         totalVideos:   videoIds.length,
         totalChannels: channels.length,
-        streak:        _computeStreak(storage['_daily'] ?? {}),
+        streak:        _computeStreak(daily),
+        activeDays:    Object.values(daily).filter(d => (d?.watched ?? 0) > 0).length,
     };
 };
 
 const _valueForMilestone = (stats, longestStreak, m) => {
-    if (m.category === 'time')     return stats.totalWatched;
-    if (m.category === 'videos')   return stats.totalVideos;
-    if (m.category === 'channels') return stats.totalChannels;
-    if (m.category === 'streak')   return longestStreak;
+    if (m.category === 'time')        return stats.totalWatched;
+    if (m.category === 'videos')      return stats.totalVideos;
+    if (m.category === 'channels')    return stats.totalChannels;
+    if (m.category === 'streak')      return longestStreak;
+    if (m.category === 'active_days') return stats.activeDays;
 };
 
 const _estimateEarnedDate = (storage, milestone) => {
@@ -251,6 +303,18 @@ const _estimateEarnedDate = (storage, milestone) => {
             cumulative += daily[key]?.watched ?? 0;
             if (cumulative >= milestone.threshold) {
                 return new Date(key + 'T12:00:00').getTime();
+            }
+        }
+    }
+
+    if (milestone.category === 'active_days') {
+        let count = 0;
+        for (const key of sortedKeys) {
+            if ((daily[key]?.watched ?? 0) > 0) {
+                count++;
+                if (count >= milestone.threshold) {
+                    return new Date(key + 'T12:00:00').getTime();
+                }
             }
         }
     }

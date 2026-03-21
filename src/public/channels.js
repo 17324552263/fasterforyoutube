@@ -221,7 +221,15 @@ const renderCharts = (daily) => {
     renderHeatmap(daily);
 };
 
-const CATEGORY_LABELS = { time: 'Time Saved', videos: 'Videos', channels: 'Channels', streak: 'Streaks' };
+const CATEGORY_LABELS = { time: 'Time Saved', videos: 'Videos', channels: 'Channels', streak: 'Streaks', active_days: 'Active Days' };
+
+const _milestoneStatLabel = (m) => {
+    if (m.category !== 'time') return m.description;
+    const minutes = m.threshold / 60;
+    if (minutes < 60) return `${minutes} min`;
+    const hours = m.threshold / 3600;
+    return `${hours} hr${hours !== 1 ? 's' : ''}`;
+};
 
 const renderMilestonesSection = (record) => {
     const earned = record?.earned ?? {};
@@ -243,38 +251,28 @@ const renderMilestonesSection = (record) => {
 
         const card = document.createElement('div');
         card.className = `milestone-card ${isEarned ? 'earned' : 'locked'}`;
-        if (isEarned) card.style.borderLeftColor = CATEGORY_COLORS[cat];
+        if (isEarned) card.style.borderTopColor = CATEGORY_COLORS[cat];
 
-        const header = document.createElement('div');
-        header.className = 'milestone-card-header';
-
-        const icon = document.createElement('span');
+        const icon = document.createElement('div');
         icon.className = 'milestone-card-icon';
         icon.innerHTML = displayed.svg;
 
-        const catLabel = document.createElement('span');
+        const catLabel = document.createElement('div');
         catLabel.className = 'milestone-card-cat';
         catLabel.textContent = CATEGORY_LABELS[cat];
-
-        header.appendChild(icon);
-        header.appendChild(catLabel);
 
         const label = document.createElement('div');
         label.className = 'milestone-card-label';
         label.textContent = displayed.label;
 
-        const desc = document.createElement('div');
-        desc.className = 'milestone-card-desc';
-        if (isEarned) {
-            const date = new Date(earned[displayed.id]).toLocaleDateString();
-            desc.textContent = `${displayed.description} · ${date}`;
-        } else {
-            desc.textContent = displayed.description;
-        }
+        const stat = document.createElement('div');
+        stat.className = 'milestone-card-stat';
+        stat.textContent = _milestoneStatLabel(displayed);
 
-        card.appendChild(header);
+        card.appendChild(icon);
+        card.appendChild(catLabel);
         card.appendChild(label);
-        card.appendChild(desc);
+        card.appendChild(stat);
         grid.appendChild(card);
     }
 
