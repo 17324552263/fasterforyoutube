@@ -4,13 +4,24 @@ const CATEGORY_LABELS = {
     videos:      'Videos',
     channels:    'Channels',
     streak:      'Streaks',
-    active_days: 'Active Days',
+    active_days:   'Active Days',
+    channel_depth: 'Channel Depth',
 };
 
-const renderAllMilestones = (record) => {
+const renderAllMilestones = (record, storage) => {
     const earned    = record?.earned ?? {};
     const container = document.getElementById('content');
     const categories = [...new Set(MILESTONES.map(m => m.category))];
+
+    // Each channel counted only at its single highest depth tier
+    const depthTiers = MILESTONES
+        .filter(m => m.category === 'channel_depth')
+        .sort((a, b) => b.threshold - a.threshold);
+    const depthTierCounts = {};
+    Object.keys(storage).filter(k => k.startsWith('UC')).forEach(k => {
+        const highest = depthTiers.find(m => (storage[k].videos?.length ?? 0) >= m.threshold);
+        if (highest) depthTierCounts[highest.id] = (depthTierCounts[highest.id] ?? 0) + 1;
+    });
 
     for (const cat of categories) {
         const title = document.createElement('div');
@@ -45,7 +56,15 @@ const renderAllMilestones = (record) => {
             row.appendChild(icon);
             row.appendChild(body);
 
-            if (isEarned) {
+            if (cat === 'channel_depth') {
+                const count = depthTierCounts[m.id] ?? 0;
+                if (count > 0 || isEarned) {
+                    const stat = document.createElement('div');
+                    stat.className = 'milestone-row-date';
+                    stat.textContent = `${count} channel${count !== 1 ? 's' : ''}`;
+                    row.appendChild(stat);
+                }
+            } else if (isEarned) {
                 const date = document.createElement('div');
                 date.className = 'milestone-row-date';
                 date.textContent = new Date(earned[m.id]).toLocaleDateString();
@@ -58,5 +77,5 @@ const renderAllMilestones = (record) => {
 };
 
 chrome.storage.local.get((storage) => {
-    renderAllMilestones(evaluateMilestones(storage));
+    renderAllMilestones(evaluateMilestones(storage), storage);
 });

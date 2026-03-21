@@ -4,7 +4,8 @@ const CATEGORY_COLORS = {
     videos:      '#60a8f0',
     channels:    '#60c880',
     streak:      '#f06060',
-    active_days: '#a060e0',
+    active_days:   '#a060e0',
+    channel_depth: '#e0a030',
 };
 
 // SVG icon strings — each 24×24 viewBox, cohesive design per category
@@ -208,6 +209,38 @@ const _svg = {
       <path d="M12 21.5C10 21.5 8.5 20 8.5 18c0-3 2.5-5.5 3-7 0 2.5 1.5 4 2 4.5 0-3 .5-6 1.5-8 .8 2 2.5 5 2.5 8.5 0 1.5-.3 2.5-.8 3.5.4-1 .8-1.5.8-3.5 1 1.8 1 3 1 4C17.5 20 15 21.5 12 21.5z" fill="#ff7840"/>
       <path d="M12 19.5C11 19 10.5 17.5 11 16 11.5 14.5 12 13.5 12 13 12 13.5 12.5 14.5 13 16 13.5 17.5 13 19 12 19.5z" fill="#ffc080"/>
     </svg>`,
+
+    // ── Channel Depth — gold concentric rings, one ring added per tier ────────
+
+    depth_10: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="2" fill="#e0a030"/>
+    </svg>`,
+
+    depth_25: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="3" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="12" cy="12" r="2" fill="#e0a030"/>
+    </svg>`,
+
+    depth_50: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="5.5" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.45"/>
+      <circle cx="12" cy="12" r="3" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="12" cy="12" r="2" fill="#e0a030"/>
+    </svg>`,
+
+    depth_100: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.3"/>
+      <circle cx="12" cy="12" r="5.5" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="12" cy="12" r="3" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.75"/>
+      <circle cx="12" cy="12" r="2" fill="#e0a030"/>
+    </svg>`,
+
+    depth_250: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10.5" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.2"/>
+      <circle cx="12" cy="12" r="8" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.35"/>
+      <circle cx="12" cy="12" r="5.5" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.55"/>
+      <circle cx="12" cy="12" r="3" fill="none" stroke="#e0a030" stroke-width="1.5" opacity="0.8"/>
+      <circle cx="12" cy="12" r="2" fill="#e0a030"/>
+    </svg>`,
 };
 
 // Extended streak icons reuse the blazing flame
@@ -247,11 +280,18 @@ const MILESTONES = [
     { id: 'streak_365',  category: 'streak',      label: 'Eternal Flame',   threshold: 365,                   description: '365-day streak'       },
 
     // Active days — total distinct days with any watching activity
-    { id: 'day_7',       category: 'active_days', label: 'First Week',      threshold: 7,                     description: '7 active days'        },
-    { id: 'day_30',      category: 'active_days', label: 'Monthly Regular', threshold: 30,                    description: '30 active days'       },
-    { id: 'day_100',     category: 'active_days', label: 'Centurion',       threshold: 100,                   description: '100 active days'      },
-    { id: 'day_200',     category: 'active_days', label: 'Committed',       threshold: 200,                   description: '200 active days'      },
-    { id: 'day_365',     category: 'active_days', label: 'Year of Days',    threshold: 365,                   description: '365 active days'      },
+    { id: 'day_7',       category: 'active_days',   label: 'First Week',      threshold: 7,                     description: '7 active days'        },
+    { id: 'day_30',      category: 'active_days',   label: 'Monthly Regular', threshold: 30,                    description: '30 active days'       },
+    { id: 'day_100',     category: 'active_days',   label: 'Centurion',       threshold: 100,                   description: '100 active days'      },
+    { id: 'day_200',     category: 'active_days',   label: 'Committed',       threshold: 200,                   description: '200 active days'      },
+    { id: 'day_365',     category: 'active_days',   label: 'Year of Days',    threshold: 365,                   description: '365 active days'      },
+
+    // Channel depth — most videos watched from a single channel
+    { id: 'depth_10',    category: 'channel_depth', label: 'Regular',         threshold: 10,                    description: '10 videos from one creator'  },
+    { id: 'depth_25',    category: 'channel_depth', label: 'Fan',             threshold: 25,                    description: '25 videos from one creator'  },
+    { id: 'depth_50',    category: 'channel_depth', label: 'Deep Dive',       threshold: 50,                    description: '50 videos from one creator'  },
+    { id: 'depth_100',   category: 'channel_depth', label: 'Superfan',        threshold: 100,                   description: '100 videos from one creator' },
+    { id: 'depth_250',   category: 'channel_depth', label: 'Completionist',   threshold: 250,                   description: '250 videos from one creator' },
 ].map(m => ({ ...m, svg: _svg[m.id] }));
 
 const _dateKey = (d) =>
@@ -280,7 +320,8 @@ const _computeStats = (storage) => {
         totalVideos:   videoIds.length,
         totalChannels: channels.length,
         streak:        _computeStreak(daily),
-        activeDays:    Object.values(daily).filter(d => (d?.watched ?? 0) > 0).length,
+        activeDays:       Object.values(daily).filter(d => (d?.watched ?? 0) > 0).length,
+        maxChannelVideos: channels.reduce((max, c) => Math.max(max, storage[c].videos?.length ?? 0), 0),
     };
 };
 
@@ -289,7 +330,8 @@ const _valueForMilestone = (stats, longestStreak, m) => {
     if (m.category === 'videos')      return stats.totalVideos;
     if (m.category === 'channels')    return stats.totalChannels;
     if (m.category === 'streak')      return longestStreak;
-    if (m.category === 'active_days') return stats.activeDays;
+    if (m.category === 'active_days')   return stats.activeDays;
+    if (m.category === 'channel_depth') return stats.maxChannelVideos;
 };
 
 const _estimateEarnedDate = (storage, milestone) => {
@@ -346,3 +388,9 @@ const evaluateMilestones = (storage) => {
     chrome.storage.local.set({ '_milestones': updated });
     return updated;
 };
+
+// Returns the highest channel_depth milestone reached for a given video count, or null.
+const depthTierFor = (videoCount) =>
+    MILESTONES
+        .filter(m => m.category === 'channel_depth' && videoCount >= m.threshold)
+        .sort((a, b) => b.threshold - a.threshold)[0] ?? null;

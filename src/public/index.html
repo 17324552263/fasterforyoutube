@@ -138,6 +138,21 @@
         height: 100%;
       }
 
+      #channelDepth {
+        display: none;
+        align-items: center;
+        gap: 5px;
+        margin-top: 3px;
+        font-size: 11px;
+        color: rgba(232, 234, 237, 0.55);
+      }
+
+      #channelDepth svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+
       .milestone-badge:hover {
         opacity: 1;
         transform: scale(1.2);
@@ -166,6 +181,7 @@
             Watched <span id="channelVideoCount" class="emphasis"></span>
             videos, saving <span id="channelHourCount" class="emphasis"></span>.
           </span>
+          <div id="channelDepth"></div>
         </fieldset>
       </div>
       <div class="section" id="statisticsOverview">

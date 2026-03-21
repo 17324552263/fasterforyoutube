@@ -11,6 +11,7 @@ const createChannelsTable = (channels, sortByPropertyName = 'author') => {
 
         const header = document.createElement('div');
         header.className = 'channel-detail';
+        header.appendChild(document.createElement('span')); // depth column header (blank)
         header.appendChild(createHeader('Channel', ['channel-author', 'clickable'], 'author'));
         header.appendChild(createHeader('Videos', ['channel-videos', 'clickable'], 'videos'));
         header.appendChild(createHeader('Speed', ['channel-rates', 'clickable'], 'rate'));
@@ -55,6 +56,15 @@ const createChannelsTable = (channels, sortByPropertyName = 'author') => {
         timeSaved.className = 'time-saved';
         timeSaved.textContent = savedTime;
 
+        const depthIcon = document.createElement('span');
+        depthIcon.className = 'channel-depth-icon';
+        const tier = depthTierFor(videoCount);
+        if (tier) {
+            depthIcon.innerHTML = tier.svg;
+            depthIcon.title = tier.label;
+        }
+
+        details.appendChild(depthIcon);
         details.appendChild(channelAuthor);
         details.appendChild(channelVideos);
         details.appendChild(channelRates);
@@ -161,7 +171,6 @@ const renderHeatmap = (daily) => {
     const logScale = (w) => w === 0 ? 0 : Math.log(w + 1) / Math.log(maxWatched + 1);
     const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    let lastLabelMonth = -1;
 
     ctx.font = '9px sans-serif'; ctx.textAlign = 'left';
 
@@ -176,8 +185,7 @@ const renderHeatmap = (daily) => {
             const cellX = week * COL_W;
             const cellY = LABEL_H + dow * ROW_H;
 
-            if (dow === 0 && d.getMonth() !== lastLabelMonth) {
-                lastLabelMonth = d.getMonth();
+            if (d.getDate() === 1) {
                 ctx.fillStyle = 'rgba(232,234,237,0.4)';
                 ctx.fillText(MONTHS[d.getMonth()], cellX, LABEL_H - 3);
             }
@@ -238,7 +246,7 @@ const renderMilestonesSection = (record) => {
     const grid = document.createElement('div');
     grid.className = 'milestone-grid';
 
-    const categories = [...new Set(MILESTONES.map(m => m.category))];
+    const categories = [...new Set(MILESTONES.map(m => m.category))].filter(c => c !== 'channel_depth');
     for (const cat of categories) {
         const catMilestones = MILESTONES.filter(m => m.category === cat);
 

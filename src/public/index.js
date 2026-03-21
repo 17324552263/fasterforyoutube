@@ -64,6 +64,14 @@ const setChannelStatistics = (channelIds, videoIds, storage) => {
         document.getElementById('channelName').innerText = channel.author;
         document.getElementById('channelVideoCount').innerText = channel.videos.length;
         document.getElementById('channelHourCount').innerText = formatDuration(channel.videos.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0));
+
+        const tier = depthTierFor(channel.videos.length);
+        if (tier) {
+            const el = document.getElementById('channelDepth');
+            el.innerHTML = tier.svg + `<span>${tier.label}</span>`;
+            el.title = `${tier.label} — ${tier.description}`;
+            el.style.display = 'flex';
+        }
     };
 
     const ActiveTabQuery = { active: true, currentWindow: true };
@@ -102,7 +110,7 @@ const setStorePageLinks = () => {
 
 const renderMilestoneBadges = (record) => {
     const earned = record?.earned ?? {};
-    const categories = [...new Set(MILESTONES.map(m => m.category))];
+    const categories = [...new Set(MILESTONES.map(m => m.category))].filter(c => c !== 'channel_depth');
     const top = categories.flatMap(cat => {
         const best = MILESTONES.filter(m => m.category === cat && earned[m.id])
             .sort((a, b) => earned[b.id] - earned[a.id])[0];
