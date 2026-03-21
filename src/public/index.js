@@ -12,13 +12,28 @@ const splitChannelsAndVideos = (storage) => {
 const setPopUpBehavior = () =>
     document.location.hash === '#ff' && (document.getElementById('headerRule').className = 'popup');
 
+let _totalWatchedSeconds = 0;
+
+const hourCountEl = () => document.getElementById('allHourCount');
+
+chrome.storage.onChanged.addListener((changes) => {
+    const delta = Object.entries(changes)
+        .filter(([k]) => !k.startsWith('UC'))
+        .reduce((sum, [, c]) => sum + ((c.newValue?.watched ?? 0) - (c.oldValue?.watched ?? 0)), 0);
+    if (delta > 0) {
+        const from = _totalWatchedSeconds;
+        _totalWatchedSeconds += delta;
+        animateCount(hourCountEl(), from, _totalWatchedSeconds);
+    }
+});
+
 const setStatisticsOverview = (channelIds, videoIds, storage) => {
     document.getElementById('nodata').style.display = channelIds.length ? 'none' : 'flex';
     document.getElementById('statisticsOverview').style.display = channelIds.length ? 'flex' : 'none';
     document.getElementById('allStatisticsLink').style.display = channelIds.length ? 'flex' : 'none';
 
-    const watchedSeconds = videoIds.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0);
-    document.getElementById('allHourCount').innerText = (watchedSeconds / 3600).toFixed(2);
+    _totalWatchedSeconds = videoIds.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0);
+    animateCount(hourCountEl(), 0, _totalWatchedSeconds, 1500, 'easeOut');
 };
 
 const setChannelStatistics = (channelIds, videoIds, storage) => {
@@ -48,7 +63,7 @@ const setChannelStatistics = (channelIds, videoIds, storage) => {
     const updateChannelView = (channel) => {
         document.getElementById('channelName').innerText = channel.author;
         document.getElementById('channelVideoCount').innerText = channel.videos.length;
-        document.getElementById('channelHourCount').innerText = (channel.videos.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0) / 3600).toFixed(2);
+        document.getElementById('channelHourCount').innerText = formatDuration(channel.videos.reduce((p, c) => p + (storage[c]?.watched ?? 0), 0));
     };
 
     const ActiveTabQuery = { active: true, currentWindow: true };

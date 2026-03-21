@@ -11,12 +11,19 @@
         width: 374px;
         max-width: 100%;
         font-size: 14px;
+        line-height: 1.5;
         background-color: #292a2d;
         color: #E8EAED;
       }
 
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 0;
+      }
+
       hr.popup {
-        margin-top: 24px;
+        margin-top: 16px;
       }
 
       header {
@@ -25,8 +32,8 @@
         justify-content: center;
         font-weight: bold;
         user-select: none;
-        margin: 20px;
-        font-size: 32px;
+        margin: 12px 20px;
+        font-size: 24px;
       }
 
       header p {
@@ -35,7 +42,7 @@
       }
 
       header img {
-        padding: 18px;
+        padding: 8px;
       }
 
       #content {
@@ -44,18 +51,14 @@
         flex-direction: column;
         justify-content: space-around;
       }
-    
+
       .section {
-        height: 45px;
-        padding: 8px;
+        min-height: 40px;
+        padding: 10px 8px;
         display: flex;
         align-items: center;
         flex-direction: column;
         justify-content: center;
-      }
-
-      .section:last-of-type {
-        justify-content: end;
       }
 
       .emphasis {
@@ -63,21 +66,39 @@
         font-size: 118%;
       }
 
+      #allHourCount {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+      }
+
       a {
-        color: currentColor;
+        color: #8ab4f8;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      fieldset {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        padding: 6px 12px;
       }
 
       #nodata {
-        font-size: 120%;
         height: auto;
+        text-align: center;
+        color: rgba(232, 234, 237, 0.75);
       }
 
       .imageTutorial {
         margin: auto;
-        padding: 10px;
+        padding: 8px;
       }
       .imageTutorial img {
         border-radius: 6px;
+        opacity: 0.85;
       }
 
       #channelStatistics {
@@ -87,13 +108,15 @@
       #help {
         cursor: pointer;
         text-align: center;
+        color: rgba(232, 234, 237, 0.6);
+        font-size: 13px;
       }
     </style>
   </head>
   <body>
     <header>
       <img src="../assets/faster.128.png" width="40" height="40" />
-      <p>Faster for&nbsp;&nbsp;&nbsp; YouTube</p>
+      <p>Faster for YouTube</p>
     </header>
     <hr id="headerRule">
     <div id="content">
@@ -110,12 +133,12 @@
           <legend><span id="channelName" class="emphasis"></span></legend>
           <span>
             Watched <span id="channelVideoCount" class="emphasis"></span>
-            videos, saving <span id="channelHourCount" class="emphasis"></span> hours.
+            videos, saving <span id="channelHourCount" class="emphasis"></span>.
           </span>
         </fieldset>
       </div>
       <div class="section" id="statisticsOverview">
-        <span>You've saved <span id="allHourCount" class="emphasis"></span> hours with Faster.</span>
+        <span>Time saved with Faster: <span id="allHourCount" class="emphasis"></span></span>
         <span id="allStatisticsLink"></span>
       </div>
       <div class="section">
@@ -127,6 +150,7 @@
         </span>
       </div>
     </div>
+    <script src="utils.js"></script>
     <script src="index.js"></script>
   </body>
 </html>

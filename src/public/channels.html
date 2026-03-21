@@ -6,10 +6,16 @@
         margin: auto;
         width: 420px;
         max-width: 100%;
-        max-height: 300px;
         font-size: 14px;
+        line-height: 1.5;
         background-color: #292a2d;
         color: #E8EAED;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 0;
       }
 
       header {
@@ -18,8 +24,8 @@
         justify-content: center;
         font-weight: bold;
         user-select: none;
-        margin: 8px;
-        font-size: 32px;
+        margin: 12px 8px;
+        font-size: 24px;
       }
 
       header p {
@@ -28,7 +34,7 @@
       }
 
       header img {
-        padding: 18px;
+        padding: 8px;
       }
 
       #content {
@@ -40,15 +46,18 @@
       }
 
       #nochannels {
-        font-size: 120%;
+        text-align: center;
+        color: rgba(232, 234, 237, 0.75);
+        padding: 8px;
       }
 
       .imageTutorial {
         margin: auto;
-        padding: 10px;
+        padding: 8px;
       }
       .imageTutorial img {
         border-radius: 6px;
+        opacity: 0.85;
       }
 
       ul li {
@@ -64,12 +73,15 @@
 
       .channel-detail {
         display: flex;
+        align-items: center;
         cursor: default;
+        padding: 6px 2px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       }
 
       .channel-author {
+        flex: 1;
         text-overflow: ellipsis;
-        width: calc(374px - 190px);
         overflow: hidden;
         white-space: nowrap;
       }
@@ -80,8 +92,10 @@
       }
 
       .channel-rates {
-        padding: 0px;
-        margin: 0px;
+        padding: 0 10px;
+        margin: 0;
+        min-width: 50px;
+        text-align: center;
       }
 
       .channel-saved {
@@ -91,10 +105,23 @@
       .time-saved {
         text-align: right;
         width: 80px;
+        color: rgba(232, 234, 237, 0.75);
+      }
+
+      @keyframes flash {
+        0%   { color: #fff; background-color: rgba(255, 255, 255, 0.15); }
+        100% { color: rgba(232, 234, 237, 0.75); background-color: transparent; }
+      }
+
+      .flash {
+        animation: flash 1s ease-out;
+        border-radius: 3px;
       }
 
       div#headers {
-        margin-bottom: 6px;
+        margin-bottom: 4px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .clickable {
@@ -106,19 +133,27 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 10px;
+        padding: 12px 10px;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 6px;
       }
 
       .emphasis {
         font-weight: bold;
         font-size: 118%;
       }
+
+      #hourCount {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+      }
     </style>
   </head>
   <body>
     <header>
       <img src="../assets/faster.128.png" width="40" height="40" />
-      <p>Faster for&nbsp;&nbsp;&nbsp; YouTube</p>
+      <p>Faster for YouTube</p>
     </header>
     <hr>
     <div id="content">
@@ -132,13 +167,14 @@
       </div>
       <div id="channel-results">
         <div id="channel-summary">
-          <span>You've saved <span id="hourCount" class="emphasis"></span> hours by<br/></span>
+          <span>Time saved: <span id="hourCount" class="emphasis"></span><br/></span>
           <span>playing <span id="videoCount" class="emphasis"></span> videos <span id="averageSpeed" class="emphasis"></span>x faster<br/></span>
           <span>across <span id="channelCount" class="emphasis"></span> channels.</span>
         </div>
         <div id="channels"></div>
       </div>
     </div>
+    <script src="utils.js"></script>
     <script src="channels.js"></script>
   </body>
 </html>

@@ -11,12 +11,22 @@
         static collect = (sendHeartbeat) => {
             StatisticsController._stop();
             const startCollecting = (shouldSendNow) => StatisticsController._start(sendHeartbeat, shouldSendNow);
-    
-            const video = document.querySelector('video[src]');
-            video.addEventListener('play', startCollecting);
-            video.addEventListener('pause', () => StatisticsController._stop());
-    
-            StatisticsController.catchPlayingVideo(video, startCollecting);
+
+            const waitForVideo = () => new Promise(resolve => {
+                const v = document.querySelector('video[src]');
+                if (v) return resolve(v);
+                const observer = new MutationObserver(() => {
+                    const v = document.querySelector('video[src]');
+                    if (v) { observer.disconnect(); resolve(v); }
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+
+            waitForVideo().then(video => {
+                video.addEventListener('play', startCollecting);
+                video.addEventListener('pause', () => StatisticsController._stop());
+                StatisticsController.catchPlayingVideo(video, startCollecting);
+            });
         }
 
         static _start = (sendHeartbeat, shouldSendNow = false) => {
