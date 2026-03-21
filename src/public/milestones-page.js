@@ -22,10 +22,11 @@ const renderAllMilestones = (record) => {
 
             const row = document.createElement('div');
             row.className = `milestone-row ${isEarned ? 'earned' : 'locked'}`;
+            if (isEarned) row.style.borderLeftColor = CATEGORY_COLORS[cat];
 
             const icon = document.createElement('div');
             icon.className = 'milestone-row-icon';
-            icon.textContent = m.icon;
+            icon.innerHTML = m.svg;
 
             const body = document.createElement('div');
             body.className = 'milestone-row-body';

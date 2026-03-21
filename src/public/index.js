@@ -111,7 +111,7 @@ const renderMilestoneBadges = (record) => {
     for (const m of earnedList) {
         const badge = document.createElement('span');
         badge.className = 'milestone-badge';
-        badge.textContent = m.icon;
+        badge.innerHTML = m.svg;
         badge.title = `${m.label} — ${m.description}`;
         container.appendChild(badge);
     }

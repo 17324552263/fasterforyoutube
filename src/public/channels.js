@@ -243,13 +243,14 @@ const renderMilestonesSection = (record) => {
 
         const card = document.createElement('div');
         card.className = `milestone-card ${isEarned ? 'earned' : 'locked'}`;
+        if (isEarned) card.style.borderLeftColor = CATEGORY_COLORS[cat];
 
         const header = document.createElement('div');
         header.className = 'milestone-card-header';
 
         const icon = document.createElement('span');
         icon.className = 'milestone-card-icon';
-        icon.textContent = displayed.icon;
+        icon.innerHTML = displayed.svg;
 
         const catLabel = document.createElement('span');
         catLabel.className = 'milestone-card-cat';

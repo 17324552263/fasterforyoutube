@@ -122,11 +122,20 @@
       }
 
       .milestone-badge {
-        font-size: 16px;
-        line-height: 1;
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         cursor: default;
         opacity: 0.85;
         transition: opacity 0.15s, transform 0.15s;
+        flex-shrink: 0;
+      }
+
+      .milestone-badge svg {
+        width: 100%;
+        height: 100%;
       }
 
       .milestone-badge:hover {
