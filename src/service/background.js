@@ -19,6 +19,22 @@ const updateVideoStats = (id, elapsed, watched) =>
             save(id, video)
         });
 
+const todayKey = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+};
+
+const updateDailyStats = (elapsed, watched) =>
+    chrome.storage.local.get('_daily').then(result => {
+        const daily = result['_daily'] ?? {};
+        const key = todayKey();
+        const day = daily[key] ?? { elapsed: 0, watched: 0 };
+        day.elapsed += elapsed;
+        day.watched += watched;
+        daily[key] = day;
+        save('_daily', daily);
+    });
+
 const fetchChannel = (id) => new Promise((resolve) =>
     chrome.storage.local.get(id)
         .then(value => resolve(value?.[id] ?? {'videos': []})));
@@ -61,5 +77,6 @@ chrome.runtime.onMessage.addListener((request, sender, _) => {
     } else if (request.type === 'heartbeat') {
         saveChannel(request);
         updateVideoStats(request.videoId, request.elapsed, request.watched);
+        updateDailyStats(request.elapsed, request.watched);
     }
 });

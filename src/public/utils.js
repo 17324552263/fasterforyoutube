@@ -12,10 +12,35 @@ const formatDuration = (seconds) => {
 };
 
 const formatWatchedTime = (seconds) => {
-    const h = Math.floor(seconds / 3600);
+    if (seconds < 60) return `${Math.floor(seconds)}s`;
+    if (seconds < 3600) {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return s > 0 ? `${m}m ${s}s` : `${m}m`;
+    }
+    if (seconds < 86400) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        return m > 0 ? `${h}h ${m}m` : `${h}h`;
+    }
+    if (seconds < 604800) {
+        const d = Math.floor(seconds / 86400);
+        const h = Math.floor((seconds % 86400) / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        let s = `${d}d`;
+        if (h > 0) s += ` ${h}h`;
+        if (m > 0) s += ` ${m}m`;
+        return s;
+    }
+    const w = Math.floor(seconds / 604800);
+    const d = Math.floor((seconds % 604800) / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
-    const s = (seconds % 60).toFixed(1).padStart(4, '0');
-    return `${h}:${String(m).padStart(2, '0')}:${s}`;
+    let s = `${w}w`;
+    if (d > 0) s += ` ${d}d`;
+    if (h > 0) s += ` ${h}h`;
+    if (m > 0) s += ` ${m}m`;
+    return s;
 };
 
 // easing: 'linear' or 'easeOut'

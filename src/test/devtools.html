@@ -84,21 +84,78 @@
       <a href="index.html">Test Runner</a>
     </nav>
 
-    <h3>Load Test Data</h3>
+    <h3>Legacy (no activity data)</h3>
+    <p style="font-size:0.8em;color:#666;margin:0 0 10px">No <code>_daily</code> key — simulates existing users before the activity update.</p>
 
     <button class="dataset-btn" data-dataset="SmallDataset">
       <div class="label">Small</div>
       <div class="desc">3 channels · ~10 videos · quick inspection</div>
     </button>
 
+    <button class="dataset-btn" data-dataset="MediumDataset">
+      <div class="label">Medium</div>
+      <div class="desc">12 channels · 500+ videos · stress test layout and summary</div>
+    </button>
+
     <button class="dataset-btn" data-dataset="LargeDataset">
       <div class="label">Large</div>
-      <div class="desc">12 channels · 500+ videos · stress test layout and summary</div>
+      <div class="desc">104 channels · 6000+ videos · no activity history</div>
     </button>
 
     <button class="dataset-btn" data-dataset="EdgeCasesDataset">
       <div class="label">Edge Cases</div>
-      <div class="desc">1x speed, orphaned videos, no videos, long names, heavy watch time</div>
+      <div class="desc">1x, 4x, 5x speeds · orphaned videos · no videos · long names · heavy watch time</div>
+    </button>
+
+    <h3>With Activity Data</h3>
+    <p style="font-size:0.8em;color:#666;margin:0 0 10px">Includes <code>_daily</code> — tests line chart and heatmap rendering.</p>
+
+    <button class="dataset-btn" data-dataset="SmallDatasetWithActivity">
+      <div class="label">Small + Activity</div>
+      <div class="desc">3 channels · 11 active days over 2 weeks</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="MediumDatasetWithActivity">
+      <div class="label">Medium + Activity</div>
+      <div class="desc">12 channels · 90 days with weekday/weekend variation</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="LargeDatasetWithActivity">
+      <div class="label">Large + Activity</div>
+      <div class="desc">104 channels · 6000+ videos · 3 years of daily history</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="EdgeCasesWithActivity">
+      <div class="label">Edge Cases + Activity</div>
+      <div class="desc">All channel edge cases · 5 scattered active days</div>
+    </button>
+
+    <h3>Activity Edge Cases</h3>
+    <p style="font-size:0.8em;color:#666;margin:0 0 10px">Isolate specific chart behaviors.</p>
+
+    <button class="dataset-btn" data-dataset="ActivitySingleDayDataset">
+      <div class="label">Single Day</div>
+      <div class="desc">Only today — tests minimal data rendering</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="ActivitySparseDataset">
+      <div class="label">Sparse Activity</div>
+      <div class="desc">5 days scattered over a year — mostly empty heatmap</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="ActivityDenseStreakDataset">
+      <div class="label">Dense Streak</div>
+      <div class="desc">45 consecutive days — filled line chart and heatmap block</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="ActivityBeyondRangeDataset">
+      <div class="label">Beyond Range</div>
+      <div class="desc">All data older than 365 days — charts should appear empty</div>
+    </button>
+
+    <button class="dataset-btn" data-dataset="ActivitySpikyDataset">
+      <div class="label">Spike Day</div>
+      <div class="desc">One 20h session surrounded by light days — tests color scaling</div>
     </button>
 
     <button id="clear-btn">Clear Storage</button>
@@ -108,6 +165,7 @@
 
     <script src="data/builder.js"></script>
     <script src="data/small.js"></script>
+    <script src="data/medium.js"></script>
     <script src="data/large.js"></script>
     <script src="data/edge-cases.js"></script>
     <script src="devtools.js"></script>

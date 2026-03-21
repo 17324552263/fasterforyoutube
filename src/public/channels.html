@@ -60,19 +60,9 @@
         opacity: 0.85;
       }
 
-      ul li {
-        display: inline;
-      }
-
-      li.rate-selected {
-        font-weight: bold;
-      }
-      li:not(.rate-selected) {
-        visibility: hidden;
-      }
-
       .channel-detail {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 44px 60px 80px;
         align-items: center;
         cursor: default;
         padding: 6px 2px;
@@ -80,7 +70,7 @@
       }
 
       .channel-author {
-        flex: 1;
+        min-width: 0;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -91,20 +81,25 @@
         text-decoration: underline;
       }
 
-      .channel-rates {
-        padding: 0 10px;
-        margin: 0;
-        min-width: 50px;
+      .channel-videos,
+      .channel-video-count {
         text-align: center;
       }
 
-      .channel-saved {
-        margin: auto;
+      .channel-video-count {
+        color: rgba(232, 234, 237, 0.75);
+      }
+
+      .channel-rates {
+        text-align: center;
+      }
+
+      .channel-saved,
+      .time-saved {
+        text-align: right;
       }
 
       .time-saved {
-        text-align: right;
-        width: 80px;
         color: rgba(232, 234, 237, 0.75);
       }
 
@@ -148,6 +143,47 @@
         font-variant-numeric: tabular-nums;
         letter-spacing: 0.02em;
       }
+
+      #charts {
+        margin-bottom: 12px;
+      }
+
+      .chart-section {
+        margin-bottom: 12px;
+      }
+
+      .chart-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(232, 234, 237, 0.4);
+        margin-bottom: 6px;
+        user-select: none;
+      }
+
+      .chart-empty {
+        font-size: 12px;
+        color: rgba(232, 234, 237, 0.35);
+        text-align: center;
+        padding: 8px 0 4px;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      #heatmap {
+        margin: 0 auto;
+      }
+
+      #heatmap-info {
+        font-size: 11px;
+        color: rgba(232, 234, 237, 0.6);
+        text-align: center;
+        min-height: 16px;
+        margin-top: 4px;
+        user-select: none;
+      }
     </style>
   </head>
   <body>
@@ -167,9 +203,15 @@
       </div>
       <div id="channel-results">
         <div id="channel-summary">
-          <span>Time saved: <span id="hourCount" class="emphasis"></span><br/></span>
-          <span>playing <span id="videoCount" class="emphasis"></span> videos <span id="averageSpeed" class="emphasis"></span>x faster<br/></span>
-          <span>across <span id="channelCount" class="emphasis"></span> channels.</span>
+          <span>You've saved <span id="hourCount" class="emphasis"></span> with Faster</span>
+          <span>playing <span id="videoCount" class="emphasis"></span> videos <span id="averageSpeed" class="emphasis"></span>x faster across <span id="channelCount" class="emphasis"></span> channels.</span>
+        </div>
+        <div id="charts">
+          <div class="chart-section">
+            <div class="chart-title">Watching activity</div>
+            <canvas id="heatmap"></canvas>
+            <div id="heatmap-info"></div>
+          </div>
         </div>
         <div id="channels"></div>
       </div>
