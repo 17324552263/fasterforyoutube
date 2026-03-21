@@ -184,6 +184,54 @@
         margin-top: 4px;
         user-select: none;
       }
+
+      #milestones-section {
+        margin-bottom: 16px;
+      }
+
+      .milestone-category {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .milestone-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 8px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.04);
+        min-width: 0;
+        flex: 1 1 160px;
+      }
+
+      .milestone-item.locked {
+        opacity: 0.3;
+      }
+
+      .milestone-icon {
+        font-size: 18px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .milestone-label {
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .milestone-desc {
+        font-size: 11px;
+        color: rgba(232, 234, 237, 0.55);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     </style>
   </head>
   <body>
@@ -206,6 +254,9 @@
           <span>You've saved <span id="hourCount" class="emphasis"></span> with Faster</span>
           <span>playing <span id="videoCount" class="emphasis"></span> videos <span id="averageSpeed" class="emphasis"></span>x faster across <span id="channelCount" class="emphasis"></span> channels.</span>
         </div>
+        <div id="milestones-section">
+          <div class="chart-title">Milestones</div>
+        </div>
         <div id="charts">
           <div class="chart-section">
             <div class="chart-title">Watching activity</div>
@@ -217,6 +268,7 @@
       </div>
     </div>
     <script src="utils.js"></script>
+    <script src="milestones.js"></script>
     <script src="channels.js"></script>
   </body>
 </html>

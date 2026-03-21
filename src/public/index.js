@@ -100,6 +100,23 @@ const setStorePageLinks = () => {
     help.onclick = () => window.open(storeUrl, '_blank');
 };
 
+const renderMilestoneBadges = (record) => {
+    const earned = record?.earned ?? {};
+    const earnedList = MILESTONES.filter(m => earned[m.id])
+        .sort((a, b) => earned[a.id] - earned[b.id]);
+    if (!earnedList.length) return;
+
+    const container = document.getElementById('milestones');
+    container.style.display = 'flex';
+    for (const m of earnedList) {
+        const badge = document.createElement('span');
+        badge.className = 'milestone-badge';
+        badge.textContent = m.icon;
+        badge.title = `${m.label} — ${m.description}`;
+        container.appendChild(badge);
+    }
+};
+
 chrome.storage.local.get((storage) => {
     setPopUpBehavior();
     let [channelIds, videoIds] = splitChannelsAndVideos(storage);
@@ -107,4 +124,5 @@ chrome.storage.local.get((storage) => {
     setChannelStatistics(channelIds, videoIds, storage);
     setStatisticsLink();
     setStorePageLinks();
+    renderMilestoneBadges(evaluateMilestones(storage));
 });

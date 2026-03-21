@@ -221,10 +221,55 @@ const renderCharts = (daily) => {
     renderHeatmap(daily);
 };
 
+const renderMilestonesSection = (record) => {
+    const earned = record?.earned ?? {};
+    const container = document.getElementById('milestones-section');
+
+    const categories = [...new Set(MILESTONES.map(m => m.category))];
+    for (const cat of categories) {
+        const group = document.createElement('div');
+        group.className = 'milestone-category';
+
+        for (const m of MILESTONES.filter(m => m.category === cat)) {
+            const item = document.createElement('div');
+            item.className = `milestone-item ${earned[m.id] ? 'earned' : 'locked'}`;
+
+            const icon = document.createElement('span');
+            icon.className = 'milestone-icon';
+            icon.textContent = m.icon;
+
+            const info = document.createElement('div');
+            info.style.minWidth = '0';
+
+            const label = document.createElement('div');
+            label.className = 'milestone-label';
+            label.textContent = m.label;
+
+            const desc = document.createElement('div');
+            desc.className = 'milestone-desc';
+            if (earned[m.id]) {
+                const date = new Date(earned[m.id]).toLocaleDateString();
+                desc.textContent = `${m.description} · ${date}`;
+            } else {
+                desc.textContent = m.description;
+            }
+
+            info.appendChild(label);
+            info.appendChild(desc);
+            item.appendChild(icon);
+            item.appendChild(info);
+            group.appendChild(item);
+        }
+
+        container.appendChild(group);
+    }
+};
+
 chrome.storage.local.get((storage) => {
     const channels = buildChannelsWithVideos(storage);
     toggleChannelsVisibility(!!channels.length);
     createChannelSummary(channels);
     createChannelsTable(channels);
     renderCharts(storage['_daily'] ?? {});
+    renderMilestonesSection(evaluateMilestones(storage));
 });

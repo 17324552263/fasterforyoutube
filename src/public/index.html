@@ -111,6 +111,28 @@
         color: rgba(232, 234, 237, 0.6);
         font-size: 13px;
       }
+
+      #milestones {
+        display: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: center;
+        padding: 6px 8px 2px;
+      }
+
+      .milestone-badge {
+        font-size: 16px;
+        line-height: 1;
+        cursor: default;
+        opacity: 0.85;
+        transition: opacity 0.15s, transform 0.15s;
+      }
+
+      .milestone-badge:hover {
+        opacity: 1;
+        transform: scale(1.2);
+      }
     </style>
   </head>
   <body>
@@ -141,6 +163,7 @@
         <span>You've saved <span id="allHourCount" class="emphasis"></span> with Faster</span>
         <span id="allStatisticsLink"></span>
       </div>
+      <div id="milestones"></div>
       <div class="section">
         <span id="help">
           Have a question or feedback?
@@ -151,6 +174,7 @@
       </div>
     </div>
     <script src="utils.js"></script>
+    <script src="milestones.js"></script>
     <script src="index.js"></script>
   </body>
 </html>
