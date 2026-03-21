@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Faster for YouTube — Milestones</title>
+    <style>
+      body {
+        margin: auto;
+        width: 420px;
+        max-width: 100%;
+        font-size: 14px;
+        line-height: 1.5;
+        background-color: #292a2d;
+        color: #E8EAED;
+        padding-bottom: 24px;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 0;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        user-select: none;
+        margin: 12px 8px;
+        font-size: 24px;
+      }
+
+      header p {
+        margin: 0 10px;
+        text-align: center;
+      }
+
+      header img {
+        padding: 8px;
+      }
+
+      #content {
+        padding: 16px 10px 0;
+      }
+
+      .section-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(232, 234, 237, 0.4);
+        margin: 20px 0 8px;
+        user-select: none;
+      }
+
+      .section-title:first-child {
+        margin-top: 0;
+      }
+
+      .milestone-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .milestone-row.locked {
+        opacity: 0.3;
+      }
+
+      .milestone-row-icon {
+        font-size: 20px;
+        line-height: 1;
+        flex-shrink: 0;
+        width: 24px;
+        text-align: center;
+      }
+
+      .milestone-row-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .milestone-row-label {
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      .milestone-row-desc {
+        font-size: 11px;
+        color: rgba(232, 234, 237, 0.55);
+      }
+
+      .milestone-row-date {
+        font-size: 11px;
+        color: rgba(232, 234, 237, 0.4);
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="../assets/faster.128.png" width="40" height="40" />
+      <p>Milestones</p>
+    </header>
+    <hr>
+    <div id="content"></div>
+    <script src="utils.js"></script>
+    <script src="milestones.js"></script>
+    <script src="milestones-page.js"></script>
+  </body>
+</html>

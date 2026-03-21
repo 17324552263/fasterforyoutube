@@ -189,48 +189,61 @@
         margin-bottom: 16px;
       }
 
-      .milestone-category {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 10px;
+      .milestone-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 6px;
       }
 
-      .milestone-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 8px;
+      .milestone-card {
+        padding: 8px 10px;
         border-radius: 6px;
         background: rgba(255, 255, 255, 0.04);
         min-width: 0;
-        flex: 1 1 160px;
       }
 
-      .milestone-item.locked {
-        opacity: 0.3;
+      .milestone-card.locked {
+        opacity: 0.35;
       }
 
-      .milestone-icon {
-        font-size: 18px;
+      .milestone-card-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 3px;
+      }
+
+      .milestone-card-icon {
+        font-size: 15px;
         line-height: 1;
         flex-shrink: 0;
       }
 
-      .milestone-label {
-        font-size: 12px;
-        font-weight: bold;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      .milestone-card-cat {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(232, 234, 237, 0.4);
       }
 
-      .milestone-desc {
+      .milestone-card-label {
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .milestone-card-desc {
         font-size: 11px;
         color: rgba(232, 234, 237, 0.55);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      .milestone-all-link {
+        text-align: right;
+        font-size: 11px;
+        margin-top: 2px;
       }
     </style>
   </head>

@@ -221,48 +221,72 @@ const renderCharts = (daily) => {
     renderHeatmap(daily);
 };
 
+const CATEGORY_LABELS = { time: 'Time Saved', videos: 'Videos', channels: 'Channels', streak: 'Streaks' };
+
 const renderMilestonesSection = (record) => {
     const earned = record?.earned ?? {};
     const container = document.getElementById('milestones-section');
 
+    const grid = document.createElement('div');
+    grid.className = 'milestone-grid';
+
     const categories = [...new Set(MILESTONES.map(m => m.category))];
     for (const cat of categories) {
-        const group = document.createElement('div');
-        group.className = 'milestone-category';
+        const catMilestones = MILESTONES.filter(m => m.category === cat);
 
-        for (const m of MILESTONES.filter(m => m.category === cat)) {
-            const item = document.createElement('div');
-            item.className = `milestone-item ${earned[m.id] ? 'earned' : 'locked'}`;
+        // Most recently earned in this category, falling back to the first locked one
+        const earnedInCat = catMilestones
+            .filter(m => earned[m.id])
+            .sort((a, b) => earned[b.id] - earned[a.id]);
+        const displayed = earnedInCat[0] ?? catMilestones[0];
+        const isEarned  = !!earnedInCat[0];
 
-            const icon = document.createElement('span');
-            icon.className = 'milestone-icon';
-            icon.textContent = m.icon;
+        const card = document.createElement('div');
+        card.className = `milestone-card ${isEarned ? 'earned' : 'locked'}`;
 
-            const info = document.createElement('div');
-            info.style.minWidth = '0';
+        const header = document.createElement('div');
+        header.className = 'milestone-card-header';
 
-            const label = document.createElement('div');
-            label.className = 'milestone-label';
-            label.textContent = m.label;
+        const icon = document.createElement('span');
+        icon.className = 'milestone-card-icon';
+        icon.textContent = displayed.icon;
 
-            const desc = document.createElement('div');
-            desc.className = 'milestone-desc';
-            if (earned[m.id]) {
-                const date = new Date(earned[m.id]).toLocaleDateString();
-                desc.textContent = `${m.description} · ${date}`;
-            } else {
-                desc.textContent = m.description;
-            }
+        const catLabel = document.createElement('span');
+        catLabel.className = 'milestone-card-cat';
+        catLabel.textContent = CATEGORY_LABELS[cat];
 
-            info.appendChild(label);
-            info.appendChild(desc);
-            item.appendChild(icon);
-            item.appendChild(info);
-            group.appendChild(item);
+        header.appendChild(icon);
+        header.appendChild(catLabel);
+
+        const label = document.createElement('div');
+        label.className = 'milestone-card-label';
+        label.textContent = displayed.label;
+
+        const desc = document.createElement('div');
+        desc.className = 'milestone-card-desc';
+        if (isEarned) {
+            const date = new Date(earned[displayed.id]).toLocaleDateString();
+            desc.textContent = `${displayed.description} · ${date}`;
+        } else {
+            desc.textContent = displayed.description;
         }
 
-        container.appendChild(group);
+        card.appendChild(header);
+        card.appendChild(label);
+        card.appendChild(desc);
+        grid.appendChild(card);
     }
+
+    container.appendChild(grid);
+
+    const linkRow = document.createElement('div');
+    linkRow.className = 'milestone-all-link';
+    const a = document.createElement('a');
+    a.href = chrome.runtime.getURL('public/milestones.html');
+    a.target = '_blank';
+    a.textContent = 'View all milestones →';
+    linkRow.appendChild(a);
+    container.appendChild(linkRow);
 };
 
 chrome.storage.local.get((storage) => {
