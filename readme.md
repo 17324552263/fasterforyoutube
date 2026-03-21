@@ -47,15 +47,21 @@ Firefox requires the extension to be loaded from a zip due to macOS file access 
 
 > Temporary add-ons in Firefox are removed when the browser closes. For persistent local installs, you need a [signed or unlisted build](https://extensionworkshop.com/documentation/publish/).
 
-### Create a Release Build
+### Create a Build
 
-The release artifact is a zip of the `src/` directory. Run from the repo root:
+The version is read directly from `manifest.json`, so updating the manifest is all you need before building.
 
+**Dev** — includes `test/` so the devtools and test runner are accessible in Firefox:
 ```bash
-VERSION=$(grep -m1 '"version"' src/manifest.json | sed 's/[^0-9.]//g') && (cd src && zip -r "../dist/FFTY-${VERSION}.zip" . -x "**/.DS_Store")
+make dev
 ```
 
-The version is read directly from `manifest.json`, so updating the manifest is all you need before building. The same zip can be submitted to both stores — Chrome ignores `browser_specific_settings` and Firefox ignores `version_name`.
+**Release** — strips `test/` from the package before submitting to the stores:
+```bash
+make release
+```
+
+Both zips work for Firefox (`about:debugging`) and Chrome (`chrome://extensions`). The same release zip can be submitted to both stores — Chrome ignores `browser_specific_settings` and Firefox ignores `version_name`.
 
 ### Submitting to Stores
 
