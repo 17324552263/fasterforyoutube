@@ -97,33 +97,30 @@ const animateCount = (el, from, to, duration = 1000, easing = 'easeOut') => {
     if (!el) return new Promise(r => r());
     const animFrom = Math.max(from, unitThreshold(to));
 
-    // Reserve the final value's width before any frame runs.
     el.innerHTML = formatWatchedTimeHTML(to);
     el.style.display = 'inline-block';
     el.style.minWidth = el.offsetWidth + 'px';
 
-    // Decompose a seconds value into unit parts.
-    const dec = (s) => ({
-        w: Math.floor(s / 604800),
-        d: Math.floor((s % 604800) / 86400),
-        h: Math.floor((s % 86400) / 3600),
-        m: Math.floor((s % 3600) / 60),
-        s: Math.floor(s % 60),
-    });
-    const f = dec(animFrom), g = dec(to);
+    // Final decomposed values — used for settle and free-roll phases.
+    const g = {
+        w: Math.floor(to / 604800),
+        d: Math.floor((to % 604800) / 86400),
+        h: Math.floor((to % 86400) / 3600),
+        m: Math.floor((to % 3600) / 60),
+        s: Math.floor(to % 60),
+    };
 
-    // Each unit gets its own independent counter with a staggered start.
-    // Most significant unit begins immediately; each subsequent unit follows
-    // STAGGER ms later. This creates a "progressive precision" cascade:
-    // weeks settle first, then days, then hours, then minutes.
-    const STAGGER = 120;
+    const MODS   = { d: 7, h: 24, m: 60, s: 60 };
+    const SCALES = { w: 604800, d: 86400, h: 3600, m: 60, s: 1 };
+    const SETTLE = 350; // ms per sub-unit settle spin
+
     const units = to >= 604800 ? ['w','d','h','m']
                 : to >= 86400  ? ['d','h','m']
                 : to >= 3600   ? ['h','m']
                 : to >= 60     ? ['m','s']
                 :                ['s'];
 
-    const ease = (x) => easing === 'easeOut' ? 1 - Math.pow(1 - x, 3) : x;
+    const primaryEase = (t) => easing === 'easeOut' ? 1 - Math.pow(1 - t, 3) : t;
 
     const render = (p) => {
         if (to >= 604800) return `${p.w}w` + _sub(p.d,'d') + _sub(p.h,'h') + _sub(p.m,'m');
@@ -133,20 +130,77 @@ const animateCount = (el, from, to, duration = 1000, easing = 'easeOut') => {
         return `${p.s}s`;
     };
 
-    const totalDuration = duration + STAGGER * (units.length - 1);
+    // Three phases per sub-unit (index i, 0-based within units.slice(1)):
+    //
+    // 1. ODOMETER  (0 → duration)
+    //    All units driven by the interpolated total-seconds value — the natural
+    //    cascade where minutes roll into hours, hours into days, etc.
+    //
+    // 2. FREE ROLL (duration → duration + i*SETTLE)
+    //    Primary has settled; sub-unit rolls at constant speed.
+    //    Rate is exactly mod ticks per SETTLE ms, so after i*SETTLE ms the
+    //    unit has completed i full cycles and arrives cleanly at g[unit].
+    //
+    // 3. SETTLE    (duration + i*SETTLE → duration + (i+1)*SETTLE)
+    //    One final easeOut cycle: g[unit] → g[unit]+mod displayed as %mod.
+    //    Starts and ends at g[unit]; decelerates visibly into the final value.
+
+    const totalDuration = duration + units.length * SETTLE; // generous upper bound
 
     return new Promise(resolve => {
         const startTime = performance.now();
         const tick = (now) => {
             const elapsed = now - startTime;
             const parts = { ...g };
-            units.forEach((unit, i) => {
-                const progress = Math.min(Math.max(0, elapsed - i * STAGGER) / duration, 1);
-                parts[unit] = Math.round(f[unit] + (g[unit] - f[unit]) * ease(progress));
+
+            const primaryT = Math.min(elapsed / duration, 1);
+            const currentSeconds = animFrom + (to - animFrom) * primaryEase(primaryT);
+
+            // Primary unit: pure odometer, no modulo.
+            parts[units[0]] = Math.floor(currentSeconds / SCALES[units[0]]);
+
+            units.slice(1).forEach((unit, subIdx) => {
+                const mod = MODS[unit];
+
+                if (elapsed < duration) {
+                    // Phase 1: odometer — all sub-units driven by interpolated seconds.
+                    parts[unit] = Math.floor(currentSeconds / SCALES[unit]) % mod;
+                } else if (subIdx === 0) {
+                    // The first sub-unit (e.g. days when primary is weeks) is already
+                    // at g[unit] from the odometer — no free-roll or settle needed.
+                    parts[unit] = g[unit];
+                } else {
+                    // Phases 2 & 3 only apply to sub-units with subIdx >= 1, which
+                    // needed to "wait" while closer units settled first.
+                    const settleStart = duration + (subIdx - 1) * SETTLE;
+
+                    if (elapsed < settleStart) {
+                        // Phase 2: free roll — mod ticks per SETTLE ms, landing on g[unit].
+                        const waitElapsed = elapsed - duration;
+                        parts[unit] = (g[unit] + Math.floor(mod * (waitElapsed / SETTLE))) % mod;
+                    } else {
+                        // Phase 3: settle spin — one easeOut cycle landing on g[unit].
+                        const settleT = Math.min((elapsed - settleStart) / SETTLE, 1);
+                        parts[unit] = Math.floor(g[unit] + mod * primaryEase(settleT)) % mod;
+                    }
+                }
             });
+
             el.innerHTML = render(parts);
-            if (elapsed < totalDuration) requestAnimationFrame(tick);
-            else resolve();
+            if (elapsed < totalDuration) {
+                requestAnimationFrame(tick);
+            } else {
+                // Crossfade to compact format — strips figure-space padding from sub-units.
+                const compact = formatWatchedTime(to).replace(/\u2007/g, '');
+                el.style.transition = 'opacity 200ms';
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.innerHTML = compact;
+                    el.style.minWidth = '';
+                    el.style.opacity = '1';
+                    setTimeout(() => { el.style.transition = ''; resolve(); }, 200);
+                }, 200);
+            }
         };
         requestAnimationFrame(tick);
     });
