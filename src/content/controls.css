@@ -28,6 +28,28 @@
 
 #speedLabel {
     font-size: 14px;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    white-space: nowrap;
+    transition: max-width 0.25s ease, opacity 0.2s;
+}
+
+.speed-widget-inner:hover #speedLabel {
+    max-width: 60px;
+    opacity: 1;
+}
+
+.speed-widget-controls .faster-button:not(.faster-button-selected) {
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width 0.25s ease, opacity 0.2s, font-size 0.4s ease-in-out, font-weight 0.4s;
+}
+
+.speed-widget-inner:hover .faster-button:not(.faster-button-selected) {
+    max-width: 48px;
+    opacity: 0.6;
 }
 
 .ytp-chrome-controls .ytp-button.faster-button {
@@ -57,10 +79,6 @@
 
 @media all and (max-width: 600px) {
     /* Embedded Videos */
-    #speedLabel {
-        display: none;
-    }
-
     .ytp-chrome-controls .ytp-button.faster-button {
         width: 34px !important;
     }
