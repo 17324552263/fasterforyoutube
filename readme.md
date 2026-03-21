@@ -1,89 +1,154 @@
 # Faster For YouTube
-Unlocking video playback speeds and functionality for users to own how they want to interact with media.
 
-Maintaining a set of principles which puts user experience above all else:
-- No data collected. Data utilized by the extension stays on the user's computer and is not collected.
-- Avoid unncessary dependencies. Reduce distractions from pursuing the main goals, while maximizing the accessibility of the codebase.
+Play YouTube videos faster and remember your speed settings per channel.
 
-## Project Structure
-The project has two main sections, the public website hosted by [Github Pages](https://docs.github.com/en/pages) within `docs/` and the chrome extension source under `src/`.
+**[Install for Chrome](https://chrome.google.com/webstore/detail/faster-for-youtube)** · **[Install for Firefox](https://addons.mozilla.org/firefox/addon/faster-for-youtube/)** · [Website](https://ffyt.17324552263.com/) · [Release Notes](docs/release.md) · [Privacy Policy](docs/privacy.md)
 
-### Public Website
-With Github Pages, we host under the [subdomain FFYT](https://ffyt.17324552263.com/) showcasing a landing page, privacy policy, and release notes.
+---
 
-### Source File Overview
-`content/`
-- `controls` - HTML Speed Buttons added to a video
-- `statistics` - 1 Second interval which logs time saved from watching videos faster
-- `inject` - We need data directly from YouTube (YT) javascript objects. Content Scripts do not have access to the same executing environment as the page, so we need to _inject_ our own script into the Document Object Model (DOM).
-- `extract` - The script which is _inject_-ed into the DOM to retrieve and post back data.
+## Features
 
-`public/`
-- `index` - Popup that appears when the extension is clicked.
-- `channels`- Channel Statistics list that shows time saved by channel.
+### Speed Controls on Every Video
+Buttons appear directly in the YouTube player — tap to change speed instantly. Works on embedded videos and smaller devices.
 
-`service/`
-- `background` - Service worker handling event-based requests and rebroadcasting messages.
+<img src="docs/assets/0.2.0-beta/PlayerMedium.png" alt="Speed controls on a video" width="480">
+<img src="docs/assets/0.2.0-beta/PlayerSmall.png" alt="Speed controls on a small video" width="240">
 
-## Building & Distribution
+### Popup — Time Saved at a Glance
+Click the extension icon to see total time saved across all channels, with a full breakdown by weeks, days, hours, and minutes.
 
-No build tools or dependencies are required. The extension runs directly from the `src/` directory.
+<img src="docs/assets/0.2.0-beta/PopUpOverview.png" alt="Popup overview" width="320">
 
-### Load Unpacked (Local Development)
+### Channel Statistics
+View time saved grouped by channel. Speeds are stored per-channel and remembered across sessions.
 
-**Chrome / Chromium:**
-1. Navigate to `chrome://extensions`
+<img src="docs/assets/0.2.0-beta/ChannelStatistics.png" alt="Channel statistics page" width="480">
+
+---
+
+## Install
+
+| Browser | Link |
+|---------|------|
+| Chrome / Edge / Chromium | [Chrome Web Store](https://chrome.google.com/webstore/detail/faster-for-youtube) |
+| Firefox | [Firefox Add-ons (AMO)](https://addons.mozilla.org/firefox/addon/faster-for-youtube/) |
+
+**No account required. No data collected.** All stats stay in your local browser storage.
+
+---
+
+## Get Started (Local Development)
+
+No build tools or dependencies are required — the extension runs directly from `src/`.
+
+### Chrome / Chromium
+1. Go to `chrome://extensions`
 2. Enable **Developer mode** (toggle, top right)
-3. Click **Load unpacked** and select the `src/` folder
+3. Click **Load unpacked** → select the `src/` folder
 
-**Firefox:**
+### Firefox
+Firefox requires a zip due to macOS file access restrictions.
 
-Firefox requires the extension to be loaded from a zip due to macOS file access restrictions — selecting only `manifest.json` will load the extension but Firefox won't be able to read any other files in the directory.
+1. Run `make dev` to build the zip
+2. Go to `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on** → select the zip from `dist/`
 
-1. Build the zip (see [Create a Release Build](#create-a-release-build) below)
-2. Navigate to `about:debugging#/runtime/this-firefox`
-3. Click **Load Temporary Add-on**
-4. Select the zip from `dist/`
+> Temporary add-ons are removed when Firefox closes. For a persistent install, use a [signed or unlisted build](https://extensionworkshop.com/documentation/publish/).
 
-> Temporary add-ons in Firefox are removed when the browser closes. For persistent local installs, you need a [signed or unlisted build](https://extensionworkshop.com/documentation/publish/).
+---
 
-### Create a Build
+## Latest Release
 
-The version is read directly from `manifest.json`, so updating the manifest is all you need before building.
+### 0.5.0-beta — 2026.03.20
+- Time saved now displays in full detail — weeks, days, hours, and minutes — on both the popup and channels page
+- Watching activity heatmap shows date and time saved on hover
+- Time saved animates with an easing effect
 
-**Dev** — includes `test/` so the devtools and test runner are accessible in Firefox:
-```bash
-make dev
+[View full release notes →](docs/release.md)
+
+---
+
+## Development
+
+### Project Structure
+
+```
+src/
+  content/     # Injected into YouTube pages
+  public/      # Popup and Channel Statistics pages
+  service/     # Background service worker
+  test/        # In-browser test runner (test/index.html)
 ```
 
-**Release** — strips `test/` from the package before submitting to the stores:
+**`content/`**
+- `controls` — Speed buttons rendered inside the video player
+- `statistics` — 1-second interval that logs time saved while watching
+- `inject` — Injects a script into the page DOM to access YouTube's JS objects
+- `extract` — The injected script; retrieves and posts data back to the content script
+
+**`public/`**
+- `index` — Popup shown when the extension icon is clicked
+- `channels` — Channel Statistics page with per-channel breakdown
+
+**`service/`**
+- `background` — Service worker that handles events and stores stats
+
+### Building
+
+The version is read from `manifest.json` — update it there before building.
+
 ```bash
-make release
+make dev      # includes test/ — devtools and test runner accessible in Firefox
+make release  # strips test/ — ready to submit to stores
 ```
 
-Both zips work for Firefox (`about:debugging`) and Chrome (`chrome://extensions`). The same release zip can be submitted to both stores — Chrome ignores `browser_specific_settings` and Firefox ignores `version_name`.
+Both zips work for Firefox (`about:debugging`) and Chrome (`chrome://extensions`). The same release zip can be submitted to both stores.
 
 ### Submitting to Stores
 
 | Store | Dashboard | Notes |
-|---|---|---|
-| Chrome Web Store | [Developer Dashboard](https://chrome.google.com/webstore/devconsole) | Upload the zip under the existing listing |
-| Firefox Add-ons (AMO) | [Developer Hub](https://addons.mozilla.org/developers/) | Create a new listing; the `gecko.id` in `manifest.json` ties it to your account |
+|-------|-----------|-------|
+| Chrome Web Store | [Developer Dashboard](https://chrome.google.com/webstore/devconsole) | Upload zip under the existing listing |
+| Firefox Add-ons | [Developer Hub](https://addons.mozilla.org/developers/) | `gecko.id` in `manifest.json` ties it to your account |
 
-## Chrome Extension - How Do?
-Working in the Chrome Extension ecosystem has its own set of constraints and preferred architecture. Different aspects of your extension have access to different subsets of the HTML elements and the Chrome API. Bridging this gap, is a set of messaging capabilities which ensure higher impact APIs are executed in isolation.
+### Running Tests
 
-There are 5 main areas of access in a Chrome Extension:
-- Popup page which is activated by clicking on a specific chrome extension icon on the top bar of the browser
-- Extension pages like the Channel Statistics which are hosted under `chrome-extension://{EXTENSION+ID}/path/to/page.html`
-- Content Scripts which are injected into certain webpages with access to the HTML elements but execute in an isolated javascript environment.
-- Web Accessible Resources which can be attached to a webpage that you have had a Content Script injected. This allows you to gain access to Javascript objects on the page that a Content Script wouldn't have access to.
-- Background service worker that is persistent* across all the tabs your extension may be running on.
-    - *Event driven responses means your service worker may be put to sleep when not utilized, unloading local variables.
+Open `src/test/index.html` in a browser (or load via the dev build in Firefox DevTools). The in-browser test runner covers `channels.js`, `utils.js`, and `data/builder.js` with no external dependencies.
 
-### Chrome Extension Message Flow
-Once you understand how information is passed between the above components, breaking down where to add new functionality or investigate issues becomes easier.
+---
 
-- Popup pages, Extension pages, and Background service worker can broadcast messages across your extension and to specific tabs.
-- Content Scripts can broadcast messages across your extension.
-- Web Accessible Resources executing within the page and outside of the Chrome API can only use `window.postMessage` which can be intercepted by anyone listening.
+## Architecture
+
+### Chrome Extension Contexts
+
+There are five execution contexts, each with different access:
+
+| Context | What it can access |
+|---------|-------------------|
+| Popup page | Chrome API, extension storage |
+| Extension pages (e.g. Channel Stats) | Chrome API, extension storage |
+| Content Scripts | Page DOM, Chrome messaging — isolated JS environment |
+| Web Accessible Resources | Page JS objects — no Chrome API |
+| Background service worker | Full Chrome API, persistent\* across tabs |
+
+\* Event-driven — the worker may sleep when idle, unloading local variables.
+
+### Message Flow
+
+```
+YouTube page
+  └─ extract.js (WAR)        window.postMessage →
+       inject.js (content)   chrome.runtime.sendMessage →
+         background.js       chrome.storage.local.set
+                             chrome.tabs.sendMessage →
+           popup / channels  (read stats, render)
+```
+
+- Popup, extension pages, and the background worker can send messages to each other and to specific tabs.
+- Content scripts can send messages extension-wide.
+- Web Accessible Resources run inside the page and can only use `window.postMessage`, interceptable by any listener on that page.
+
+### Principles
+
+- **No data collection.** All data stays on the user's machine and is never transmitted.
+- **No dependencies.** The codebase is plain HTML/CSS/JS — no build step, no npm, no frameworks.
