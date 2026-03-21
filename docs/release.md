@@ -1,6 +1,12 @@
 # Release Notes
 A record of feature updates that users experience. This documentation announces functionality, but does not replace how-to information or support.
 
+## 0.4.0-beta, 2026.03.20
+- Speed controls collapse to the active speed when not in use, reducing clutter in the control bar
+- Speed controls expand on hover with a dark background for better contrast against any video
+- Playback speed can now be increased beyond 3x up to 5x using the new + button
+- Fullscreen grid buttons no longer overlap speed controls
+
 ## 0.3.0-beta, 2026.03.20
 - Add Firefox support
 
