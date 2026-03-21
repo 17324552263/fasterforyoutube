@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Faster for YouTube — Tests</title>
+    <style>
+      body { font-family: monospace; background: #1e1e1e; color: #ccc; padding: 20px; }
+      h2   { color: #fff; }
+      h3   { color: #aaa; margin: 16px 0 4px; }
+      #summary      { font-size: 1.2em; font-weight: bold; margin-bottom: 20px; }
+      .pass         { color: #4caf50; }
+      .fail         { color: #f44336; }
+      .test         { margin: 2px 0 2px 12px; }
+
+      /* Stub DOM elements required by channels.js */
+      #nochannels, #channel-results, #channels,
+      #hourCount, #videoCount, #averageSpeed, #channelCount { display: none; }
+    </style>
+  </head>
+  <body>
+    <h2>Faster for YouTube — Test Results</h2>
+    <div id="summary"></div>
+    <div id="results"></div>
+
+    <!-- Stub DOM nodes required by channels.js -->
+    <span id="hourCount"></span>
+    <span id="videoCount"></span>
+    <span id="averageSpeed"></span>
+    <span id="channelCount"></span>
+    <div id="nochannels"></div>
+    <div id="channel-results"></div>
+    <div id="channels"></div>
+
+    <!-- Mock chrome API before channels.js loads -->
+    <script src="mock-chrome.js"></script>
+    <script src="../public/channels.js"></script>
+    <script src="runner.js"></script>
+    <script src="channels.test.js"></script>
+  </body>
+</html>
