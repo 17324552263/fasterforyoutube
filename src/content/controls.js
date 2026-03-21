@@ -1,10 +1,14 @@
 (() => {
     const PlaybackSpeedDefaults = [1, 1.5, 2, 2.5, 3];
+    const MaxSpeed = 5;
+    const IncrementStep = 0.5;
+    const PresetMax = PlaybackSpeedDefaults[PlaybackSpeedDefaults.length - 1];
 
     class CSSClassHelper {
         static Button = 'ytp-button';
         static SpeedButton = 'faster-button';
         static SpeedButtonSelected = 'faster-button-selected';
+        static SpeedButtonIncrement = 'faster-button-increment';
         static SpeedButtonClasses = [CSSClassHelper.Button, CSSClassHelper.SpeedButton];
 
         static SpeedParentWidget = 'speed-widget';
@@ -46,7 +50,11 @@
     const setSpeedLabelActive = (speed) => {
         for (let child of DOMHelper.fetchSpeedButtons()) {
             child.classList.remove(CSSClassHelper.SpeedButtonSelected);
-            if (child.dataset.speed === speed.toString()) {
+            if (child.classList.contains(CSSClassHelper.SpeedButtonIncrement)) {
+                const abovePresets = speed > PresetMax;
+                child.dataset.speed = abovePresets ? `${speed}x` : '+';
+                if (abovePresets) child.classList.add(CSSClassHelper.SpeedButtonSelected);
+            } else if (child.dataset.speed === speed.toString()) {
                 child.classList.add(CSSClassHelper.SpeedButtonSelected);
             }
         }
@@ -94,11 +102,25 @@
             return inner;
         };
 
+        const createIncrementButton = () => {
+            const b = document.createElement('span');
+            b.dataset.speed = '+';
+            b.classList.add(...CSSClassHelper.SpeedButtonClasses, CSSClassHelper.SpeedButtonIncrement);
+            b.addEventListener('click', () => {
+                const currentSpeed = DOMHelper.fetchVideo().playbackRate;
+                const newSpeed = Math.min(+(currentSpeed + IncrementStep).toFixed(1), MaxSpeed);
+                updateVideoSpeed(newSpeed);
+                broadcastSpeedUpdate(newSpeed);
+            });
+            return b;
+        };
+
         const parent = createSpeedParent();
         const inner = parent.appendChild(createSpeedInner());
         inner.appendChild(createSpeedLabel());
         const container = inner.appendChild(createControlsContainer());
         PlaybackSpeedDefaults.forEach(v => container.appendChild(createSpeedButton(v)));
+        container.appendChild(createIncrementButton());
         return parent;
     };
 
