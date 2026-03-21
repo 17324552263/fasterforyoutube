@@ -70,7 +70,7 @@ const setStatisticsLink = () => {
     const link = document.createElement('a');
     link.target = '_blank';
     link.href = chrome.runtime.getURL('public/channels.html');
-    link.innerText = 'Channel Statistics!';
+    link.innerText = 'channel stats';
     link.className = 'emphasis';
     text.appendChild(link);
     container.appendChild(text);
