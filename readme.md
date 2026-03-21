@@ -20,9 +20,15 @@ Click the extension icon to see total time saved across all channels, with a ful
 <img src="docs/assets/0.2.0-beta/PopUpOverview.png" alt="Popup overview" width="320">
 
 ### Channel Statistics
-View time saved grouped by channel. Speeds are stored per-channel and remembered across sessions.
+View time saved grouped by channel. Speeds are stored per-channel and remembered across sessions. Includes a watching activity heatmap and a milestone summary card.
 
 <img src="docs/assets/0.2.0-beta/ChannelStatistics.png" alt="Channel statistics page" width="480">
+
+### Milestones
+Earn badges as you watch — across six categories: Time Saved, Videos, Channels, Streaks, Active Days, and Channel Depth. Your highest-earned badge per category shows in the popup. Channel Depth tracks how deeply you've watched a single creator and appears inline in the channel table and popup.
+
+### Watching Activity Heatmap
+A GitHub-style heatmap on the Channel Statistics page shows your daily watching history over the past year, with date and time saved on hover.
 
 ---
 
@@ -59,10 +65,15 @@ Firefox requires a zip due to macOS file access restrictions.
 
 ## Latest Release
 
-### 0.5.0-beta — 2026.03.20
-- Time saved now displays in full detail — weeks, days, hours, and minutes — on both the popup and channels page
-- Watching activity heatmap shows date and time saved on hover
-- Time saved animates with an easing effect
+### 0.6.3 — 2026.03.21
+- Real-time watch time updates no longer show extra spacing during playback
+- Channel time-saved cells no longer flash unexpectedly while a video is playing
+
+### 0.6.2 — 2026.03.21
+- Milestones system with badges across six categories: Time Saved, Videos, Channels, Streaks, Active Days, Channel Depth
+- Channel Depth tier shown per channel in the table and in the popup when on a channel's video
+- Watching activity heatmap month labels at actual month start
+- Full milestones page with earned dates and channel counts for depth tiers
 
 [View full release notes →](docs/release.md)
 
@@ -88,7 +99,10 @@ src/
 
 **`public/`**
 - `index` — Popup shown when the extension icon is clicked
-- `channels` — Channel Statistics page with per-channel breakdown
+- `channels` — Channel Statistics page with per-channel breakdown, heatmap, and milestone summary
+- `milestones` — Full milestones page listing all badges with earned dates and channel counts
+- `milestones.js` — Milestone definitions, SVGs, evaluation logic, and `depthTierFor()` helper
+- `utils.js` — Shared formatting and animation utilities
 
 **`service/`**
 - `background` — Service worker that handles events and stores stats

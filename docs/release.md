@@ -1,6 +1,19 @@
 # Release Notes
 A record of feature updates that users experience. This documentation announces functionality, but does not replace how-to information or support.
 
+## 0.6.3, 2026.03.21
+- Real-time watch time updates now display without extra spacing
+- Channel time-saved cells no longer flash unexpectedly during active playback
+
+## 0.6.2, 2026.03.21
+- Milestones — earn badges across six categories as you watch: Time Saved, Videos, Channels, Streaks, Active Days, and Channel Depth
+- Channel Depth milestones track how deeply you've watched a single creator (10, 25, 50, 100, 250 videos)
+- Channel Depth tier icon shown per channel in the channel table and in the popup when on a channel's video
+- Watching activity heatmap month labels now appear at the actual first of the month
+- Milestone badges shown in the popup — one per category, showing your highest earned
+- Full milestones page lists all milestones with earned dates and channel counts for depth tiers
+- Channel stats page shows a milestone summary card and watching activity heatmap
+
 ## 0.5.0-beta, 2026.03.20
 - Time saved now displays in full detail — weeks, days, hours, and minutes — on both the popup and channels page
 - Watching activity heatmap shows date and time saved on hover
