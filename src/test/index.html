@@ -12,9 +12,6 @@
       .fail         { color: #f44336; }
       .test         { margin: 2px 0 2px 12px; }
 
-      /* Stub DOM elements required by channels.js */
-      #nochannels, #channel-results, #channels,
-      #hourCount, #videoCount, #averageSpeed, #channelCount { display: none; }
     </style>
   </head>
   <body>
@@ -22,21 +19,14 @@
     <div id="summary"></div>
     <div id="results"></div>
 
-    <!-- Stub DOM nodes required by channels.js -->
-    <span id="hourCount"></span>
-    <span id="videoCount"></span>
-    <span id="averageSpeed"></span>
-    <span id="channelCount"></span>
-    <div id="nochannels"></div>
-    <div id="channel-results"></div>
-    <div id="channels"></div>
-
     <!-- Mock chrome API before channels.js loads -->
     <script src="mock-chrome.js"></script>
+    <script src="../public/utils.js"></script>
     <script src="../public/channels.js"></script>
     <script src="data/builder.js"></script>
     <script src="runner.js"></script>
     <script src="channels.test.js"></script>
     <script src="builder.test.js"></script>
+    <script src="utils.test.js"></script>
   </body>
 </html>

@@ -7,6 +7,17 @@ const storage = {
 };
 
 describe('buildChannelsWithVideos', () => {
+    beforeAll(() => {
+        [['span', 'hourCount'], ['span', 'videoCount'], ['span', 'averageSpeed'],
+         ['span', 'channelCount'], ['div', 'nochannels'], ['div', 'channel-results'],
+         ['div', 'channels']]
+            .forEach(([tag, id]) => {
+                const el = document.createElement(tag);
+                el.id = id;
+                document.body.appendChild(el);
+            });
+    });
+
     const result = buildChannelsWithVideos(storage);
 
     it('returns only channel entries', () =>
@@ -53,7 +64,7 @@ describe('createChannelSummary', () => {
     createChannelSummary(channels);
 
     it('sets hourCount', () =>
-        assert.equal(document.getElementById('hourCount').textContent, (0.25).toFixed(2)));
+        assert.equal(document.getElementById('hourCount').innerHTML, formatWatchedTimeHTML(900)));
 
     it('sets videoCount', () =>
         assert.equal(document.getElementById('videoCount').textContent, '2'));
@@ -79,5 +90,11 @@ describe('toggleChannelsVisibility', () => {
         toggleChannelsVisibility(false);
         assert.equal(document.getElementById('nochannels').style.display, 'flex');
         assert.equal(document.getElementById('channel-results').style.display, 'none');
+    });
+
+    afterAll(() => {
+        ['hourCount', 'videoCount', 'averageSpeed', 'channelCount',
+         'nochannels', 'channel-results', 'channels']
+            .forEach(id => document.getElementById(id)?.remove());
     });
 });

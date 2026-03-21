@@ -3,19 +3,25 @@ const _suites = [];
 let _active = null;
 
 const describe = (name, fn) => {
-    _active = { name, tests: [] };
+    _active = { name, tests: [], _beforeAll: null, _afterAll: null, _pending: [] };
     _suites.push(_active);
-    fn();
+    fn(); // collects beforeAll / afterAll / it registrations
+    if (_active._beforeAll) _active._beforeAll();
+    for (const { name: tName, fn: tFn } of _active._pending) {
+        try {
+            tFn();
+            _active.tests.push({ name: tName, pass: true });
+        } catch (e) {
+            _active.tests.push({ name: tName, pass: false, error: e.message });
+        }
+    }
+    if (_active._afterAll) _active._afterAll();
 };
 
-const it = (name, fn) => {
-    try {
-        fn();
-        _active.tests.push({ name, pass: true });
-    } catch (e) {
-        _active.tests.push({ name, pass: false, error: e.message });
-    }
-};
+const beforeAll = (fn) => { _active._beforeAll = fn; };
+const afterAll  = (fn) => { _active._afterAll  = fn; };
+
+const it = (name, fn) => { _active._pending.push({ name, fn }); };
 
 const assert = {
     equal:     (a, b)    => { if (a !== b)  throw new Error(`Expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`); },

@@ -1,1 +1,6 @@
-window.chrome = { storage: { local: { get: () => {} } } };
+window.chrome = {
+    storage: {
+        local:     { get: () => {} },
+        onChanged: { addListener: () => {} },
+    },
+};
