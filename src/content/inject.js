@@ -20,9 +20,11 @@ var FFYP_UUID = Array(8).fill('x').map(i => {
         document.head.appendChild(s).onload = () => s.remove();
     };
     
-    const forwardMessageToRuntime = () => window.addEventListener('message', event =>
+    const forwardMessageToRuntime = () => window.addEventListener('message', event => {
+        if (event.origin !== location.origin) return;
         event?.data?.source === '_FasterFor_' && chrome.runtime.sendMessage(Object.assign(
-            {}, event?.data, {'uuid': FFYP_UUID})));
+            {}, event?.data, {'uuid': FFYP_UUID}));
+    });
 
     attachExtractionScript();
     forwardMessageToRuntime();
