@@ -1,6 +1,11 @@
 # Release Notes
 A record of feature updates that users experience. This documentation announces functionality, but does not replace how-to information or support.
 
+## 0.5.0-beta, 2026.03.20
+- Time saved now displays in full detail — weeks, days, hours, and minutes — on both the popup and channels page
+- Watching activity heatmap shows date and time saved on hover
+- Time saved animates with an easing effect
+
 ## 0.4.0-beta, 2026.03.20
 - Speed controls collapse to the active speed when not in use, reducing clutter in the control bar
 - Speed controls expand on hover with a dark background for better contrast against any video
