@@ -95,21 +95,57 @@ const unitThreshold = (seconds) => {
 // easing: 'linear' or 'easeOut'
 const animateCount = (el, from, to, duration = 1000, easing = 'easeOut') => {
     if (!el) return new Promise(r => r());
-    // Clamp the start to the unit tier of `to` so the format string
-    // never changes mid-animation (eliminates text-layout jank).
     const animFrom = Math.max(from, unitThreshold(to));
-    // Reserve the final value's full width (including hidden placeholders for
-    // zero sub-units) before animating so surrounding text never moves.
+
+    // Reserve the final value's width before any frame runs.
     el.innerHTML = formatWatchedTimeHTML(to);
     el.style.display = 'inline-block';
     el.style.minWidth = el.offsetWidth + 'px';
+
+    // Decompose a seconds value into unit parts.
+    const dec = (s) => ({
+        w: Math.floor(s / 604800),
+        d: Math.floor((s % 604800) / 86400),
+        h: Math.floor((s % 86400) / 3600),
+        m: Math.floor((s % 3600) / 60),
+        s: Math.floor(s % 60),
+    });
+    const f = dec(animFrom), g = dec(to);
+
+    // Each unit gets its own independent counter with a staggered start.
+    // Most significant unit begins immediately; each subsequent unit follows
+    // STAGGER ms later. This creates a "progressive precision" cascade:
+    // weeks settle first, then days, then hours, then minutes.
+    const STAGGER = 120;
+    const units = to >= 604800 ? ['w','d','h','m']
+                : to >= 86400  ? ['d','h','m']
+                : to >= 3600   ? ['h','m']
+                : to >= 60     ? ['m','s']
+                :                ['s'];
+
+    const ease = (x) => easing === 'easeOut' ? 1 - Math.pow(1 - x, 3) : x;
+
+    const render = (p) => {
+        if (to >= 604800) return `${p.w}w` + _sub(p.d,'d') + _sub(p.h,'h') + _sub(p.m,'m');
+        if (to >= 86400)  return `${p.d}d` + _sub(p.h,'h') + _sub(p.m,'m');
+        if (to >= 3600)   return `${p.h}h` + _sub(p.m,'m');
+        if (to >= 60)     return `${p.m}m` + _sub(p.s,'s');
+        return `${p.s}s`;
+    };
+
+    const totalDuration = duration + STAGGER * (units.length - 1);
+
     return new Promise(resolve => {
-        const start = performance.now();
+        const startTime = performance.now();
         const tick = (now) => {
-            const t = Math.min((now - start) / duration, 1);
-            const e = easing === 'easeOut' ? 1 - Math.pow(1 - t, 3) : t;
-            el.innerHTML = formatWatchedTimeHTML(animFrom + (to - animFrom) * e);
-            if (t < 1) requestAnimationFrame(tick);
+            const elapsed = now - startTime;
+            const parts = { ...g };
+            units.forEach((unit, i) => {
+                const progress = Math.min(Math.max(0, elapsed - i * STAGGER) / duration, 1);
+                parts[unit] = Math.round(f[unit] + (g[unit] - f[unit]) * ease(progress));
+            });
+            el.innerHTML = render(parts);
+            if (elapsed < totalDuration) requestAnimationFrame(tick);
             else resolve();
         };
         requestAnimationFrame(tick);
