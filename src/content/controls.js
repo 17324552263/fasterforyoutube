@@ -8,6 +8,7 @@
         static SpeedButtonClasses = [CSSClassHelper.Button, CSSClassHelper.SpeedButton];
 
         static SpeedParentWidget = 'speed-widget';
+        static SpeedInnerWidget = 'speed-widget-inner';
         static SpeedControlsContainer = 'speed-widget-controls';
     }
 
@@ -87,9 +88,16 @@
             return b;
         }
 
+        const createSpeedInner = () => {
+            const inner = document.createElement('div');
+            inner.className = CSSClassHelper.SpeedInnerWidget;
+            return inner;
+        };
+
         const parent = createSpeedParent();
-        parent.appendChild(createSpeedLabel());
-        const container = parent.appendChild(createControlsContainer());
+        const inner = parent.appendChild(createSpeedInner());
+        inner.appendChild(createSpeedLabel());
+        const container = inner.appendChild(createControlsContainer());
         PlaybackSpeedDefaults.forEach(v => container.appendChild(createSpeedButton(v)));
         return parent;
     };

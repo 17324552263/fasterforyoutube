@@ -5,20 +5,47 @@
     text-align: center;
 }
 
+.speed-widget-inner {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 6px;
+    padding: 0 6px;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.speed-widget-inner:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
 .speed-widget-controls {
     display: flex;
     justify-content: center;
     text-align: center;
-    font-size: 109%;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+#speedLabel {
+    font-size: 14px;
 }
 
 .ytp-chrome-controls .ytp-button.faster-button {
-    transition: font-size 0.4s ease-in-out, font-weight 0.4s;
+    opacity: 0.6;
+    transition: font-size 0.4s ease-in-out, font-weight 0.4s, opacity 0.2s;
+}
+
+.speed-widget-inner:hover .ytp-button.faster-button {
+    opacity: 1;
 }
 
 .ytp-chrome-controls .ytp-button.faster-button:hover {
     font-weight: bold;
     font-size: 130%;
+}
+
+.faster-button-increment::after {
+    content: attr(data-speed);
 }
 
 .ytp-button.faster-button.faster-button-selected {
@@ -43,6 +70,7 @@
     content: attr(data-speed) 'x';
 }
 
-.ytp-fullerscreen-edu-chevron {
+.ytp-fullerscreen-edu-chevron,
+.ytp-fullscreen-grid-buttons-container {
     display: none !important;
 }
